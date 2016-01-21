@@ -1,0 +1,6 @@
+#!/bin/bash
+. /etc/apache2/envvars
+
+. /etc/default/apache2
+
+exec /usr/sbin/apache2 -D FOREGROUND

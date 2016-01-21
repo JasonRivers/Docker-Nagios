@@ -1,0 +1,3 @@
+#!/bin/bash
+
+exec ${NAGIOS_HOME}/bin/nagios ${NAGIOS_HOME}/etc/nagios.cfg
