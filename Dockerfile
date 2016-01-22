@@ -1,4 +1,5 @@
 FROM ubuntu:14.04
+MAINTAINER Jason Rivers <jason@jasonrivers.co.uk>
 
 ENV NAGIOS_HOME		/opt/nagios
 ENV NAGIOS_USER		nagios
