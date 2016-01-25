@@ -1,17 +1,21 @@
 FROM ubuntu:14.04
 MAINTAINER Jason Rivers <jason@jasonrivers.co.uk>
 
-ENV NAGIOS_HOME		/opt/nagios
-ENV NAGIOS_USER		nagios
-ENV NAGIOS_GROUP	nagios
-ENV NAGIOS_CMDUSER	nagios
-ENV NAGIOS_CMDGROUP	nagios
-ENV NAGIOSADMIN_USER	nagiosadmin
-ENV NAGIOSADMIN_PASS	nagios
-ENV APACHE_RUN_USER	nagios
-ENV APACHE_RUN_GROUP	nagios
-ENV NAGIOS_TIMEZONE	UTC
-ENV DEBIAN_FRONTEND	noninteractive
+ENV NAGIOS_HOME			/opt/nagios
+ENV NAGIOS_USER			nagios
+ENV NAGIOS_GROUP		nagios
+ENV NAGIOS_CMDUSER		nagios
+ENV NAGIOS_CMDGROUP		nagios
+ENV NAGIOSADMIN_USER		nagiosadmin
+ENV NAGIOSADMIN_PASS		nagios
+ENV APACHE_RUN_USER		nagios
+ENV APACHE_RUN_GROUP		nagios
+ENV NAGIOS_TIMEZONE		UTC
+ENV DEBIAN_FRONTEND		noninteractive
+ENV NG_NAGIOS_CONFIG_FILE	${NAGIOS_HOME}/etc/nagios.cfg
+ENV NG_CGI_DIR			${NAGIOS_HOME}/sbin
+ENV NG_WWW_DIR			${NAGIOS_HOME}/share/nagiosgraph
+ENV NG_CGI_URL			/cgi-bin
 
 RUN	sed -i 's/universe/universe multiverse/' /etc/apt/sources.list	;\
 	apt-get update && apt-get install -y				\
@@ -33,7 +37,11 @@ RUN	sed -i 's/universe/universe multiverse/' /etc/apt/sources.list	;\
 		bsd-mailx						\
 		libnet-snmp-perl					\
 		git							\
-		libssl-dev						
+		libssl-dev						\
+		libcgi-pm-perl						\
+		librrds-perl						\
+		libgd-gd2-perl						\
+		libnagios-object-perl
 
 RUN	( egrep -i "^${NAGIOS_GROUP}"    /etc/group || groupadd $NAGIOS_GROUP    )				&&	\
 	( egrep -i "^${NAGIOS_CMDGROUP}" /etc/group || groupadd $NAGIOS_CMDGROUP )
@@ -78,6 +86,18 @@ RUN	cd /tmp/						&&	\
 		--with-ssl-lib=/usr/lib/x86_64-linux-gnu	&&	\
 	make check_nrpe						&&	\
 	cp src/check_nrpe ${NAGIOS_HOME}/libexec/
+
+ADD http://downloads.sourceforge.net/project/nagiosgraph/nagiosgraph/1.5.2/nagiosgraph-1.5.2.tar.gz /tmp
+RUN	cd /tmp/										&&	\
+	tar xvzf nagiosgraph-1.5.2.tar.gz							&&	\
+	cd nagiosgraph-1.5.2									&&	\
+	./install.pl --install										\
+		--prefix /opt/nagiosgraph								\
+		--nagios-user ${NAGIOS_USER}								\
+		--www-user ${NAGIOS_USER}								\
+		--nagios-perfdata-file ${NAGIOS_HOME}/var/perfdata.log					\
+		--nagios-cgi-url /cgi-bin							&&	\
+	cp share/nagiosgraph.ssi ${NAGIOS_HOME}/share/ssi/common-header.ssi
 
 RUN cd /opt &&		\
 	git clone https://github.com/willixix/WL-NagiosPlugins.git	WL-Nagios-Plugins	&&	\
