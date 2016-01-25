@@ -78,7 +78,7 @@ RUN	cd /tmp							&&	\
 	make install
 
 ADD http://downloads.sourceforge.net/project/nagios/nrpe-2.x/nrpe-2.15/nrpe-2.15.tar.gz /tmp/
-RUN	cd /tmp/						&&	\
+RUN	cd /tmp							&&	\
 	tar -zxvf nrpe-2.15.tar.gz				&&	\
 	cd nrpe-2.15						&&	\
 	./configure							\
@@ -88,7 +88,7 @@ RUN	cd /tmp/						&&	\
 	cp src/check_nrpe ${NAGIOS_HOME}/libexec/
 
 ADD http://downloads.sourceforge.net/project/nagiosgraph/nagiosgraph/1.5.2/nagiosgraph-1.5.2.tar.gz /tmp
-RUN	cd /tmp/										&&	\
+RUN	cd /tmp											&&	\
 	tar xvzf nagiosgraph-1.5.2.tar.gz							&&	\
 	cd nagiosgraph-1.5.2									&&	\
 	./install.pl --install										\
