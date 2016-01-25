@@ -43,7 +43,7 @@ RUN	( id -u $NAGIOS_USER    || useradd --system -d $NAGIOS_HOME -g $NAGIOS_GROUP
 
 ADD https://assets.nagios.com/downloads/nagioscore/releases/nagios-4.1.1.tar.gz /tmp/
 RUN	cd /tmp							&&	\
-	tar -zxvf nagios-4.1.1.tar.gz					&&	\
+	tar -zxvf nagios-4.1.1.tar.gz				&&	\
 	cd nagios-4.1.1						&&	\
 	./configure							\
 		--prefix=${NAGIOS_HOME}					\
@@ -80,31 +80,35 @@ RUN	cd /tmp/						&&	\
 	cp src/check_nrpe ${NAGIOS_HOME}/libexec/
 
 RUN cd /opt &&		\
-	git clone https://github.com/willixix/WL-NagiosPlugins.git	WL-Nagios-Plugins	;\
-	git clone https://github.com/JasonRivers/nagios-plugins.git	JR-Nagios-Plugins	;\
-	chmod +x /opt/WL-NagiosPlugins/check*							;\
+	git clone https://github.com/willixix/WL-NagiosPlugins.git	WL-Nagios-Plugins	&&	\
+	git clone https://github.com/JasonRivers/nagios-plugins.git	JR-Nagios-Plugins	&&	\
+	chmod +x /opt/WL-Nagios-Plugins/check*							&&	\
 	cp /opt/nagios/libexec/utils.sh /opt/JR-Nagios-Plugins/
 
 
 RUN	sed -i.bak 's/.*\=www\-data//g' /etc/apache2/envvars
-RUN	export DOC_ROOT="DocumentRoot $(echo $NAGIOS_HOME/share)"			;\
-	sed -i "s,DocumentRoot.*,$DOC_ROOT," /etc/apache2/sites-enabled/000-default.conf	;\
+RUN	export DOC_ROOT="DocumentRoot $(echo $NAGIOS_HOME/share)"					&&	\
+	sed -i "s,DocumentRoot.*,$DOC_ROOT," /etc/apache2/sites-enabled/000-default.conf		&&	\
+	sed -i "s,</VirtualHost>,<IfDefine ENABLE_USR_LIB_CGI_BIN>\nScriptAlias /cgi-bin/ /opt/nagios/sbin/\n</IfDefine>\n</VirtualHost>," /etc/apache2/sites-enabled/000-default.conf	&&	\
 	ln -s /etc/apache2/mods-available/cgi.load /etc/apache2/mods-enabled/cgi.load
 
-RUN	mkdir -p /usr/share/snmp/mibs							&&	\
-	mkdir -p ${NAGIOS_HOME}/etc/conf.d						&&	\
-	mkdir -p ${NAGIOS_HOME}/etc/monitor						&&	\
-	chmod 0755 /usr/share/snmp/mibs							&&	\
-	touch /usr/share/snmp/mibs/.foo							&&	\
-	ln -s /usr/share/snmp/mibs ${NAGIOS_HOME}/libexec/mibs				&&	\
-	ln -s ${NAGIOS_HOME}/bin/nagios /usr/local/bin/nagios				&&	\
-	echo "use_timezone=$NAGIOS_TIMEZONE" >> ${NAGIOS_HOME}/etc/nagios.cfg		&&	\
+RUN	mkdir -p /usr/share/snmp/mibs								&&	\
+	mkdir -p ${NAGIOS_HOME}/etc/conf.d							&&	\
+	mkdir -p ${NAGIOS_HOME}/etc/monitor							&&	\
+	mkdir -p ${NAGIOS_HOME}/.ssh								&&	\
+	chown ${NAGIOS_USER}:${NAGIOS_GROUP} ${NAGIOS_HOME}/.ssh				&&	\
+	chmod 700 ${NAGIOS_HOME}/.ssh								&&	\
+	chmod 0755 /usr/share/snmp/mibs								&&	\
+	touch /usr/share/snmp/mibs/.foo								&&	\
+	ln -s /usr/share/snmp/mibs ${NAGIOS_HOME}/libexec/mibs					&&	\
+	ln -s ${NAGIOS_HOME}/bin/nagios /usr/local/bin/nagios					&&	\
+	echo "use_timezone=$NAGIOS_TIMEZONE" >> ${NAGIOS_HOME}/etc/nagios.cfg			&&	\
 	echo "SetEnv TZ \"${NAGIOS_TIMEZONE}\"" >> /etc/apache2/conf-enabled/nagios.conf	&&	\
-	echo "cfg_dir=${NAGIOS_HOME}/etc/conf.d" >> ${NAGIOS_HOME}/etc/nagios.cfg	&&	\
-	echo "cfg_dir=${NAGIOS_HOME}/etc/monitor" >> ${NAGIOS_HOME}/etc/nagios.cfg	&&	\
+	echo "cfg_dir=${NAGIOS_HOME}/etc/conf.d" >> ${NAGIOS_HOME}/etc/nagios.cfg		&&	\
+	echo "cfg_dir=${NAGIOS_HOME}/etc/monitor" >> ${NAGIOS_HOME}/etc/nagios.cfg		&&	\
 	download-mibs && echo "mibs +ALL" > /etc/snmp/snmp.conf
 
-RUN	sed -i 's,/bin/mail,/usr/bin/mail,' /opt/nagios/etc/objects/commands.cfg	&&	\
+RUN	sed -i 's,/bin/mail,/usr/bin/mail,' /opt/nagios/etc/objects/commands.cfg		&&	\
 	sed -i 's,/usr/usr,/usr,'           /opt/nagios/etc/objects/commands.cfg
 
 RUN	cp /etc/services /var/spool/postfix/etc/
