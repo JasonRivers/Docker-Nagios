@@ -22,6 +22,11 @@ RUN	sed -i 's/universe/universe multiverse/' /etc/apt/sources.list	;\
 		iputils-ping						\
 		netcat							\
 		build-essential						\
+		automake						\
+		autoconf						\
+		gettext							\
+		m4							\
+		gperf							\
 		snmp							\
 		snmpd							\
 		snmp-mibs-downloader					\
@@ -41,7 +46,10 @@ RUN	sed -i 's/universe/universe multiverse/' /etc/apt/sources.list	;\
 		libcgi-pm-perl						\
 		librrds-perl						\
 		libgd-gd2-perl						\
-		libnagios-object-perl
+		libnagios-object-perl					\
+		fping							\
+		libfreeradius-client-dev				\
+		qstat
 
 RUN	( egrep -i "^${NAGIOS_GROUP}"    /etc/group || groupadd $NAGIOS_GROUP    )				&&	\
 	( egrep -i "^${NAGIOS_CMDGROUP}" /etc/group || groupadd $NAGIOS_CMDGROUP )
@@ -49,10 +57,10 @@ RUN	( id -u $NAGIOS_USER    || useradd --system -d $NAGIOS_HOME -g $NAGIOS_GROUP
 	( id -u $NAGIOS_CMDUSER || useradd --system -d $NAGIOS_HOME -g $NAGIOS_CMDGROUP $NAGIOS_CMDUSER )
 
 
-ADD https://assets.nagios.com/downloads/nagioscore/releases/nagios-4.1.1.tar.gz /tmp/
 RUN	cd /tmp							&&	\
-	tar -zxvf nagios-4.1.1.tar.gz				&&	\
-	cd nagios-4.1.1						&&	\
+	git clone https://github.com/NagiosEnterprises/nagioscore.git		&&	\
+	cd nagioscore						&&	\
+	git checkout tags/nagios-4.1.1				&&	\
 	./configure							\
 		--prefix=${NAGIOS_HOME}					\
 		--exec-prefix=${NAGIOS_HOME}				\
@@ -68,19 +76,20 @@ RUN	cd /tmp							&&	\
 	cp sample-config/httpd.conf /etc/apache2/conf-available/nagios.conf	&&	\
 	ln -s /etc/apache2/conf-available/nagios.conf /etc/apache2/conf-enabled/nagios.conf
 
-ADD http://www.nagios-plugins.org/download/nagios-plugins-2.1.1.tar.gz /tmp/
 RUN	cd /tmp							&&	\
-	tar -zxvf nagios-plugins-2.1.1.tar.gz			&&	\
-	cd nagios-plugins-2.1.1					&&	\
+	git clone https://github.com/nagios-plugins/nagios-plugins.git		&&	\
+	cd nagios-plugins					&&	\
+	git checkout tags/release-2.1.1				&&	\
+	./tools/setup						&&	\
 	./configure							\
 		--prefix=${NAGIOS_HOME}				&&	\
 	make							&&	\
 	make install
 
-ADD http://downloads.sourceforge.net/project/nagios/nrpe-2.x/nrpe-2.15/nrpe-2.15.tar.gz /tmp/
 RUN	cd /tmp							&&	\
-	tar -zxvf nrpe-2.15.tar.gz				&&	\
-	cd nrpe-2.15						&&	\
+	git clone https://github.com/NagiosEnterprises/nrpe.git	&&	\
+	cd nrpe							&&	\
+	git checkout tags/nrpe-2-15				&&	\
 	./configure							\
 		--with-ssl=/usr/bin/openssl				\
 		--with-ssl-lib=/usr/lib/x86_64-linux-gnu	&&	\
