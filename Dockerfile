@@ -34,6 +34,7 @@ RUN	sed -i 's/universe/universe multiverse/' /etc/apt/sources.list	;\
 		php5-gd							\
 		libgd2-xpm-dev						\
 		apache2							\
+		apache2-utils						\
 		libapache2-mod-php5					\
 		runit							\
 		unzip							\
@@ -56,6 +57,13 @@ RUN	( egrep -i "^${NAGIOS_GROUP}"    /etc/group || groupadd $NAGIOS_GROUP    )		
 RUN	( id -u $NAGIOS_USER    || useradd --system -d $NAGIOS_HOME -g $NAGIOS_GROUP    $NAGIOS_USER    )	&&	\
 	( id -u $NAGIOS_CMDUSER || useradd --system -d $NAGIOS_HOME -g $NAGIOS_CMDGROUP $NAGIOS_CMDUSER )
 
+RUN	cd /tmp
+	git clone https://github.com/multiplay/qstat.git	&&	\
+	cd qstat						&&	\
+	./autogen.sh						&&	\
+	./configure						&&	\
+	make							&&	\
+	make install	
 
 RUN	cd /tmp							&&	\
 	git clone https://github.com/NagiosEnterprises/nagioscore.git		&&	\
