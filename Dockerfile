@@ -17,6 +17,7 @@ ENV NG_CGI_DIR			${NAGIOS_HOME}/sbin
 ENV NG_WWW_DIR			${NAGIOS_HOME}/share/nagiosgraph
 ENV NG_CGI_URL			/cgi-bin
 
+
 RUN	sed -i 's/universe/universe multiverse/' /etc/apt/sources.list	;\
 	apt-get update && apt-get install -y				\
 		iputils-ping						\
@@ -49,21 +50,21 @@ RUN	sed -i 's/universe/universe multiverse/' /etc/apt/sources.list	;\
 		libgd-gd2-perl						\
 		libnagios-object-perl					\
 		fping							\
-		libfreeradius-client-dev				\
-		qstat
+		libfreeradius-client-dev				
 
 RUN	( egrep -i "^${NAGIOS_GROUP}"    /etc/group || groupadd $NAGIOS_GROUP    )				&&	\
 	( egrep -i "^${NAGIOS_CMDGROUP}" /etc/group || groupadd $NAGIOS_CMDGROUP )
 RUN	( id -u $NAGIOS_USER    || useradd --system -d $NAGIOS_HOME -g $NAGIOS_GROUP    $NAGIOS_USER    )	&&	\
 	( id -u $NAGIOS_CMDUSER || useradd --system -d $NAGIOS_HOME -g $NAGIOS_CMDGROUP $NAGIOS_CMDUSER )
 
-RUN	cd /tmp
+RUN	cd /tmp							&&	\
 	git clone https://github.com/multiplay/qstat.git	&&	\
 	cd qstat						&&	\
 	./autogen.sh						&&	\
 	./configure						&&	\
 	make							&&	\
-	make install	
+	make install						&&	\
+	make clean
 
 RUN	cd /tmp							&&	\
 	git clone https://github.com/NagiosEnterprises/nagioscore.git		&&	\
@@ -82,7 +83,8 @@ RUN	cd /tmp							&&	\
 	make install-config					&&	\
 	make install-commandmode				&&	\
 	cp sample-config/httpd.conf /etc/apache2/conf-available/nagios.conf	&&	\
-	ln -s /etc/apache2/conf-available/nagios.conf /etc/apache2/conf-enabled/nagios.conf
+	ln -s /etc/apache2/conf-available/nagios.conf /etc/apache2/conf-enabled/nagios.conf		&&	\
+	make clean
 
 RUN	cd /tmp							&&	\
 	git clone https://github.com/nagios-plugins/nagios-plugins.git		&&	\
@@ -92,7 +94,8 @@ RUN	cd /tmp							&&	\
 	./configure							\
 		--prefix=${NAGIOS_HOME}				&&	\
 	make							&&	\
-	make install
+	make install						&&	\
+	make clean
 
 RUN	cd /tmp							&&	\
 	git clone https://github.com/NagiosEnterprises/nrpe.git	&&	\
@@ -102,19 +105,19 @@ RUN	cd /tmp							&&	\
 		--with-ssl=/usr/bin/openssl				\
 		--with-ssl-lib=/usr/lib/x86_64-linux-gnu	&&	\
 	make check_nrpe						&&	\
-	cp src/check_nrpe ${NAGIOS_HOME}/libexec/
+	cp src/check_nrpe ${NAGIOS_HOME}/libexec/		&&	\
+	make clean
 
-ADD http://downloads.sourceforge.net/project/nagiosgraph/nagiosgraph/1.5.2/nagiosgraph-1.5.2.tar.gz /tmp/
 RUN	cd /tmp											&&	\
-	tar xvzf nagiosgraph-1.5.2.tar.gz							&&	\
-	cd nagiosgraph-1.5.2									&&	\
+	git clone http://git.code.sf.net/p/nagiosgraph/git nagiosgraph				&&	\
+	cd nagiosgraph										&&	\
 	./install.pl --install										\
 		--prefix /opt/nagiosgraph								\
 		--nagios-user ${NAGIOS_USER}								\
 		--www-user ${NAGIOS_USER}								\
 		--nagios-perfdata-file ${NAGIOS_HOME}/var/perfdata.log					\
 		--nagios-cgi-url /cgi-bin							&&	\
-	cp share/nagiosgraph.ssi ${NAGIOS_HOME}/share/ssi/common-header.ssi
+	cp share/nagiosgraph.ssi ${NAGIOS_HOME}/share/ssi/common-header.ssi			
 
 RUN cd /opt &&		\
 	git clone https://github.com/willixix/WL-NagiosPlugins.git	WL-Nagios-Plugins	&&	\
