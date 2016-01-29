@@ -69,7 +69,7 @@ RUN	cd /tmp							&&	\
 RUN	cd /tmp							&&	\
 	git clone https://github.com/NagiosEnterprises/nagioscore.git		&&	\
 	cd nagioscore						&&	\
-	git checkout tags/nagios-4.1.1				&&	\
+	git checkout tags/nagios-4.1.2-Pre1			&&	\
 	./configure							\
 		--prefix=${NAGIOS_HOME}					\
 		--exec-prefix=${NAGIOS_HOME}				\
