@@ -158,6 +158,12 @@ RUN	mkdir -p /etc/sv/nagios								&&	\
 	rm -rf /etc/sv/getty-5								&&	\
 	mkdir -p /etc/sv/postfix
 
+ADD nagios/nagios.cfg /opt/nagios/etc/nagios.cfg
+ADD nagios/cgi.cfg /opt/nagios/etc/cgi.cfg
+ADD nagios/templates.cfg /opt/nagios/etc/objects/templates.cfg
+ADD nagios/commands.cfg /opt/nagios/etc/objects/commands.cfg
+ADD nagios/localhost.cfg /opt/nagios/etc/objects/localhost.cfg
+
 ADD nagios.init /etc/sv/nagios/run
 ADD apache.init /etc/sv/apache/run
 ADD postfix.init /etc/sv/postfix/run
@@ -170,10 +176,6 @@ ENV APACHE_LOG_DIR /var/log/apache2
 
 EXPOSE 80
 
-VOLUME /opt/nagios/var
-VOLUME /opt/nagios/etc
-VOLUME /opt/nagios/libexec
-VOLUME /var/log/apache2
-VOLUME /usr/share/snmp/mibs
+VOLUME ["/opt/nagios/var" "/opt/nagios/etc" "/opt/nagios/libexec" "/var/log/apache2" "/usr/share/snmp/mibs"]
 
 CMD ["/usr/local/bin/start_nagios"]
