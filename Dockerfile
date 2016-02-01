@@ -124,7 +124,10 @@ RUN	cd /tmp											&&	\
 RUN cd /opt &&		\
 	git clone https://github.com/willixix/WL-NagiosPlugins.git	WL-Nagios-Plugins	&&	\
 	git clone https://github.com/JasonRivers/nagios-plugins.git	JR-Nagios-Plugins	&&	\
-	chmod +x /opt/WL-Nagios-Plugins/check*							&&	\
+	git clone https://github.com/justintime/nagios-plugins.git      JE-Nagios-Plugins       &&      \
+	chmod +x /opt/WL-Nagios-Plugins/check*                                                  &&      \
+	chmod +x /opt/JE-Nagios-Plugins/check_mem/check_mem.pl                                  &&      \
+	cp /opt/JE-Nagios-Plugins/check_mem/check_mem.pl /opt/nagios/libexec/                   &&      \
 	cp /opt/nagios/libexec/utils.sh /opt/JR-Nagios-Plugins/
 
 
