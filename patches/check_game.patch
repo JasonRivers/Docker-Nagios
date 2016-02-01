@@ -1,0 +1,4 @@
+283c283
+<     qstat_ping_field = 5;
+---
+>     qstat_ping_field = 6;

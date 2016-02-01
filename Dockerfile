@@ -85,11 +85,13 @@ RUN	cd /tmp							&&	\
 	cp sample-config/httpd.conf /etc/apache2/conf-available/nagios.conf	&&	\
 	ln -s /etc/apache2/conf-available/nagios.conf /etc/apache2/conf-enabled/nagios.conf		&&	\
 	make clean
-
+## patch check_game.c as we go to fix the ping times
+ADD	patches/check_game.patch /tmp/
 RUN	cd /tmp							&&	\
 	git clone https://github.com/nagios-plugins/nagios-plugins.git		&&	\
 	cd nagios-plugins					&&	\
 	git checkout tags/release-2.1.1				&&	\
+	patch ./plugins/check_game.c /tmp/check_game.patch	&&	\
 	./tools/setup						&&	\
 	./configure							\
 		--prefix=${NAGIOS_HOME}				&&	\
