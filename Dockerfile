@@ -50,7 +50,10 @@ RUN	sed -i 's/universe/universe multiverse/' /etc/apt/sources.list	;\
 		libgd-gd2-perl						\
 		libnagios-object-perl					\
 		fping							\
-		libfreeradius-client-dev				
+		libfreeradius-client-dev				\
+		libnet-snmp-perl					\
+		libnet-xmpp-perl				&&	\
+		apt-get clean
 
 RUN	( egrep -i "^${NAGIOS_GROUP}"    /etc/group || groupadd $NAGIOS_GROUP    )				&&	\
 	( egrep -i "^${NAGIOS_CMDGROUP}" /etc/group || groupadd $NAGIOS_CMDGROUP )
