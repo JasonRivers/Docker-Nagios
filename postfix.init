@@ -6,4 +6,4 @@
 sed -i "s/relayhost =.*/relayhost = ${MAIL_SERVER}/" /etc/postfix/main.cf
 sed -i "s/myhostname =.*/myhostname = `hostname`/" /etc/postfix/main.cf
 
-exec /usr/lib/postfix/master -d -c /etc/postfix
+exec /usr/lib/postfix/sbin/master -d -c /etc/postfix

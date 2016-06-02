@@ -1,4 +1,4 @@
-FROM ubuntu:14.04
+FROM ubuntu:16.04
 MAINTAINER Jason Rivers <jason@jasonrivers.co.uk>
 
 ENV NAGIOS_HOME			/opt/nagios
@@ -31,12 +31,12 @@ RUN	sed -i 's/universe/universe multiverse/' /etc/apt/sources.list	;\
 		snmp							\
 		snmpd							\
 		snmp-mibs-downloader					\
-		php5-cli						\
-		php5-gd							\
+		php-cli							\
+		php-gd							\
 		libgd2-xpm-dev						\
 		apache2							\
 		apache2-utils						\
-		libapache2-mod-php5					\
+		libapache2-mod-php					\
 		runit							\
 		unzip							\
 		bc							\
