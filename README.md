@@ -3,6 +3,8 @@ Docker image for Nagios
 
 Nagios Core 4.1.1 running on Ubuntu 16.04 LTS with NagiosGraph & NRPE
 
+For people wishing to stay with Ubuntu 14.04 I have created a docker tag ubntu1404. Where possible I will try and keep both images up to date.
+
 
 ### Configurations
 Nagios Configuration lives in /opt/nagios/etc
