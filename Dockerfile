@@ -52,7 +52,8 @@ RUN	sed -i 's/universe/universe multiverse/' /etc/apt/sources.list	;\
 		fping							\
 		libfreeradius-client-dev				\
 		libnet-snmp-perl					\
-		libnet-xmpp-perl				&&	\
+		libnet-xmpp-perl					\
+		parallel					&&	\
 		apt-get clean
 
 RUN	( egrep -i "^${NAGIOS_GROUP}"    /etc/group || groupadd $NAGIOS_GROUP    )				&&	\
@@ -161,10 +162,7 @@ RUN	sed -i 's,/bin/mail,/usr/bin/mail,' /opt/nagios/etc/objects/commands.cfg		&&
 
 RUN	cp /etc/services /var/spool/postfix/etc/
 
-RUN	mkdir -p /etc/sv/nagios								&&	\
-	mkdir -p /etc/sv/apache								&&	\
-	rm -rf /etc/sv/getty-5								&&	\
-	mkdir -p /etc/sv/postfix
+RUN	rm -rf /etc/sv/getty-5
 
 ADD nagios/nagios.cfg /opt/nagios/etc/nagios.cfg
 ADD nagios/cgi.cfg /opt/nagios/etc/cgi.cfg
@@ -177,6 +175,9 @@ ADD apache.init /etc/sv/apache/run
 ADD postfix.init /etc/sv/postfix/run
 ADD start.sh /usr/local/bin/start_nagios
 RUN chmod +x /usr/local/bin/start_nagios
+
+# enable all runit services
+RUN ln -s /etc/sv/* /etc/service
 
 ENV APACHE_LOCK_DIR /var/run
 ENV APACHE_LOG_DIR /var/log/apache2
