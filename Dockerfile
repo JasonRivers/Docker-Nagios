@@ -175,7 +175,6 @@ ADD nagios/localhost.cfg /opt/nagios/etc/objects/localhost.cfg
 ADD nagios.init /etc/sv/nagios/run
 ADD apache.init /etc/sv/apache/run
 ADD postfix.init /etc/sv/postfix/run
-ADD postfix.stop /etc/sv/postfix/finish
 ADD start.sh /usr/local/bin/start_nagios
 RUN chmod +x /usr/local/bin/start_nagios
 
