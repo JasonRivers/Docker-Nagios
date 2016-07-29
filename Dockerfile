@@ -53,7 +53,13 @@ RUN	sed -i 's/universe/universe multiverse/' /etc/apt/sources.list	;\
 		libfreeradius-client-dev				\
 		libnet-snmp-perl					\
 		libnet-xmpp-perl					\
-		parallel					&&	\
+		parallel					\
+		libcache-memcached-perl	\
+		libdbd-mysql-perl	\
+		libdbi-perl	\
+		libnet-tftp-perl	\
+		libredis-perl	\
+		libswitch-perl &&	\
 		apt-get clean
 
 RUN	( egrep -i "^${NAGIOS_GROUP}"    /etc/group || groupadd $NAGIOS_GROUP    )				&&	\
@@ -101,7 +107,9 @@ RUN	cd /tmp							&&	\
 		--prefix=${NAGIOS_HOME}				&&	\
 	make							&&	\
 	make install						&&	\
-	make clean
+	make clean	&&	\
+	mkdir -p /usr/lib/nagios/plugins	&&	\
+	ln -sf /opt/nagios/libexec/utils.pm /usr/lib/nagios/plugins
 
 RUN	cd /tmp							&&	\
 	git clone https://github.com/NagiosEnterprises/nrpe.git	&&	\
@@ -123,7 +131,7 @@ RUN	cd /tmp											&&	\
 		--www-user ${NAGIOS_USER}								\
 		--nagios-perfdata-file ${NAGIOS_HOME}/var/perfdata.log					\
 		--nagios-cgi-url /cgi-bin							&&	\
-	cp share/nagiosgraph.ssi ${NAGIOS_HOME}/share/ssi/common-header.ssi			
+	cp share/nagiosgraph.ssi ${NAGIOS_HOME}/share/ssi/common-header.ssi
 
 RUN cd /opt &&		\
 	git clone https://github.com/willixix/WL-NagiosPlugins.git	WL-Nagios-Plugins	&&	\
