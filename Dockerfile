@@ -79,7 +79,7 @@ RUN	cd /tmp							&&	\
 RUN	cd /tmp							&&	\
 	git clone https://github.com/NagiosEnterprises/nagioscore.git		&&	\
 	cd nagioscore						&&	\
-	git checkout tags/nagios-4.1.1				&&	\
+	git checkout tags/nagios-4.2.0				&&	\
 	./configure							\
 		--prefix=${NAGIOS_HOME}					\
 		--exec-prefix=${NAGIOS_HOME}				\
@@ -100,7 +100,7 @@ ADD	patches/check_game.patch /tmp/
 RUN	cd /tmp							&&	\
 	git clone https://github.com/nagios-plugins/nagios-plugins.git		&&	\
 	cd nagios-plugins					&&	\
-	git checkout tags/release-2.1.1				&&	\
+	git checkout tags/release-2.1.2				&&	\
 	patch ./plugins/check_game.c /tmp/check_game.patch	&&	\
 	./tools/setup						&&	\
 	./configure							\
@@ -114,7 +114,7 @@ RUN	cd /tmp							&&	\
 RUN	cd /tmp							&&	\
 	git clone https://github.com/NagiosEnterprises/nrpe.git	&&	\
 	cd nrpe							&&	\
-	git checkout tags/nrpe-2-15				&&	\
+	git checkout tags/3.0					&&	\
 	./configure							\
 		--with-ssl=/usr/bin/openssl				\
 		--with-ssl-lib=/usr/lib/x86_64-linux-gnu	&&	\
