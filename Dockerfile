@@ -53,13 +53,13 @@ RUN	sed -i 's/universe/universe multiverse/' /etc/apt/sources.list	;\
 		libfreeradius-client-dev				\
 		libnet-snmp-perl					\
 		libnet-xmpp-perl					\
-		parallel					\
-		libcache-memcached-perl	\
-		libdbd-mysql-perl	\
-		libdbi-perl	\
-		libnet-tftp-perl	\
-		libredis-perl	\
-		libswitch-perl &&	\
+		parallel						\
+		libcache-memcached-perl					\
+		libdbd-mysql-perl					\
+		libdbi-perl						\
+		libnet-tftp-perl					\
+		libredis-perl						\
+		libswitch-perl					&&	\
 		apt-get clean
 
 RUN	( egrep -i "^${NAGIOS_GROUP}"    /etc/group || groupadd $NAGIOS_GROUP    )				&&	\
@@ -159,10 +159,6 @@ RUN	mkdir -p /usr/share/snmp/mibs								&&	\
 	touch /usr/share/snmp/mibs/.foo								&&	\
 	ln -s /usr/share/snmp/mibs ${NAGIOS_HOME}/libexec/mibs					&&	\
 	ln -s ${NAGIOS_HOME}/bin/nagios /usr/local/bin/nagios					&&	\
-	echo "use_timezone=$NAGIOS_TIMEZONE" >> ${NAGIOS_HOME}/etc/nagios.cfg			&&	\
-	echo "SetEnv TZ \"${NAGIOS_TIMEZONE}\"" >> /etc/apache2/conf-enabled/nagios.conf	&&	\
-	echo "cfg_dir=${NAGIOS_HOME}/etc/conf.d" >> ${NAGIOS_HOME}/etc/nagios.cfg		&&	\
-	echo "cfg_dir=${NAGIOS_HOME}/etc/monitor" >> ${NAGIOS_HOME}/etc/nagios.cfg		&&	\
 	download-mibs && echo "mibs +ALL" > /etc/snmp/snmp.conf
 
 RUN	sed -i 's,/bin/mail,/usr/bin/mail,' /opt/nagios/etc/objects/commands.cfg		&&	\
