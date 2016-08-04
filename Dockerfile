@@ -59,7 +59,9 @@ RUN	sed -i 's/universe/universe multiverse/' /etc/apt/sources.list	;\
 		libdbi-perl						\
 		libnet-tftp-perl					\
 		libredis-perl						\
-		libswitch-perl					&&	\
+		libswitch-perl						\
+		libwww-perl							\
+		libjson-perl					&&	\
 		apt-get clean
 
 RUN	( egrep -i "^${NAGIOS_GROUP}"    /etc/group || groupadd $NAGIOS_GROUP    )				&&	\
