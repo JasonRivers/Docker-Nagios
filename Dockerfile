@@ -76,7 +76,8 @@ RUN	cd /tmp							&&	\
 	./configure						&&	\
 	make							&&	\
 	make install						&&	\
-	make clean
+	make clean						&& \
+	cd /tmp && rm -Rf qstat
 
 RUN	cd /tmp							&&	\
 	git clone https://github.com/NagiosEnterprises/nagioscore.git		&&	\
@@ -96,7 +97,8 @@ RUN	cd /tmp							&&	\
 	make install-commandmode				&&	\
 	cp sample-config/httpd.conf /etc/apache2/conf-available/nagios.conf	&&	\
 	ln -s /etc/apache2/conf-available/nagios.conf /etc/apache2/conf-enabled/nagios.conf		&&	\
-	make clean
+	make clean													&& \
+	cd /tmp && rm -Rf nagioscore
 ## patch check_game.c as we go to fix the ping times
 ADD	patches/check_game.patch /tmp/
 RUN	cd /tmp							&&	\
@@ -111,7 +113,8 @@ RUN	cd /tmp							&&	\
 	make install						&&	\
 	make clean	&&	\
 	mkdir -p /usr/lib/nagios/plugins	&&	\
-	ln -sf /opt/nagios/libexec/utils.pm /usr/lib/nagios/plugins
+	ln -sf /opt/nagios/libexec/utils.pm /usr/lib/nagios/plugins													&& \
+	cd /tmp && rm -Rf nagios-plugins
 
 RUN	cd /tmp							&&	\
 	git clone https://github.com/NagiosEnterprises/nrpe.git	&&	\
@@ -122,7 +125,8 @@ RUN	cd /tmp							&&	\
 		--with-ssl-lib=/usr/lib/x86_64-linux-gnu	&&	\
 	make check_nrpe						&&	\
 	cp src/check_nrpe ${NAGIOS_HOME}/libexec/		&&	\
-	make clean
+	make clean				&& \
+	cd /tmp && rm -Rf nrpe
 
 RUN	cd /tmp											&&	\
 	git clone http://git.code.sf.net/p/nagiosgraph/git nagiosgraph				&&	\
@@ -133,7 +137,8 @@ RUN	cd /tmp											&&	\
 		--www-user ${NAGIOS_USER}								\
 		--nagios-perfdata-file ${NAGIOS_HOME}/var/perfdata.log					\
 		--nagios-cgi-url /cgi-bin							&&	\
-	cp share/nagiosgraph.ssi ${NAGIOS_HOME}/share/ssi/common-header.ssi
+	cp share/nagiosgraph.ssi ${NAGIOS_HOME}/share/ssi/common-header.ssi			&& \
+	cd /tmp && rm -Rf nagiosgraph
 
 RUN cd /opt &&		\
 	git clone https://github.com/willixix/naglio-plugins.git	WL-Nagios-Plugins	&&	\
