@@ -136,7 +136,7 @@ RUN	cd /tmp											&&	\
 	cp share/nagiosgraph.ssi ${NAGIOS_HOME}/share/ssi/common-header.ssi
 
 RUN cd /opt &&		\
-	git clone https://github.com/willixix/WL-NagiosPlugins.git	WL-Nagios-Plugins	&&	\
+	git clone https://github.com/willixix/naglio-plugins.git	WL-Nagios-Plugins	&&	\
 	git clone https://github.com/JasonRivers/nagios-plugins.git	JR-Nagios-Plugins	&&	\
 	git clone https://github.com/justintime/nagios-plugins.git      JE-Nagios-Plugins       &&      \
 	chmod +x /opt/WL-Nagios-Plugins/check*                                                  &&      \
