@@ -40,7 +40,7 @@ RUN	sed -i 's/universe/universe multiverse/' /etc/apt/sources.list	;\
 		runit							\
 		unzip							\
 		bc							\
-		postfix							\
+		sendmail						\
 		bsd-mailx						\
 		libnet-snmp-perl					\
 		git							\
@@ -171,7 +171,7 @@ RUN	mkdir -p /usr/share/snmp/mibs								&&	\
 RUN	sed -i 's,/bin/mail,/usr/bin/mail,' /opt/nagios/etc/objects/commands.cfg		&&	\
 	sed -i 's,/usr/usr,/usr,'           /opt/nagios/etc/objects/commands.cfg
 
-RUN	cp /etc/services /var/spool/postfix/etc/
+#RUN	cp /etc/services /var/spool/postfix/etc/
 
 RUN	rm -rf /etc/sv/getty-5
 
@@ -183,7 +183,7 @@ ADD nagios/localhost.cfg /opt/nagios/etc/objects/localhost.cfg
 
 ADD nagios.init /etc/sv/nagios/run
 ADD apache.init /etc/sv/apache/run
-ADD postfix.init /etc/sv/postfix/run
+#ADD postfix.init /etc/sv/postfix/run
 ADD start.sh /usr/local/bin/start_nagios
 RUN chmod +x /usr/local/bin/start_nagios
 
