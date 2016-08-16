@@ -4,14 +4,14 @@
 # this script becomes PID 1 inside the container, catches termination signals, and stops
 # processes managed by runit
 
-if [ $(ls -l /opt/nagios/etc | tail -1 | awk '/total/ {print $2}') = 0 ]; then
+if ! [ $(ls -A /opt/nagios/etc) ]; then
     echo "Started with emty ETC, copying example data in-place"
-    cp -Rp /orig/etc/ /opt/nagios/etc/
+    cp -Rp /orig/etc/* /opt/nagios/etc/
 fi
 
-if [ $(ls -l /opt/nagios/var | tail -1 | awk '/total/ {print $2}') = 0 ]; then
+if ! [ $(ls -A /opt/nagios/var) ]; then
     echo "Started with emty VAR, copying example data in-place"
-    cp -Rp /orig/etc/ /opt/nagios/var/
+    cp -Rp /orig/var/* /opt/nagios/var/
 fi
 
 if [ ! -f ${NAGIOS_HOME}/etc/htpasswd.users ] ; then

@@ -179,8 +179,8 @@ ADD nagios/localhost.cfg /opt/nagios/etc/objects/localhost.cfg
 # Copy example config in-case the user has started with empty var or etc
 
 RUN mkdir -p /orig/var && mkdir -p /orig/etc				&&	\
-	cp -Rp /opt/nagios/var/ /orig/var/					&&	\
-	cp -Rp /opt/nagios/etc/ /orig/etc/
+	cp -Rp /opt/nagios/var/* /orig/var/					&&	\
+	cp -Rp /opt/nagios/etc/* /orig/etc/
 
 ADD nagios.init /etc/sv/nagios/run
 ADD apache.init /etc/sv/apache/run
