@@ -79,7 +79,7 @@ RUN	cd /tmp							&&	\
 RUN	cd /tmp							&&	\
 	git clone https://github.com/NagiosEnterprises/nagioscore.git		&&	\
 	cd nagioscore						&&	\
-	git checkout tags/nagios-4.2.0				&&	\
+	git checkout tags/4.2.1				&&	\
 	./configure							\
 		--prefix=${NAGIOS_HOME}					\
 		--exec-prefix=${NAGIOS_HOME}				\
@@ -96,12 +96,10 @@ RUN	cd /tmp							&&	\
 	ln -s /etc/apache2/conf-available/nagios.conf /etc/apache2/conf-enabled/nagios.conf		&&	\
 	make clean
 ## patch check_game.c as we go to fix the ping times
-ADD	patches/check_game.patch /tmp/
 RUN	cd /tmp							&&	\
 	git clone https://github.com/nagios-plugins/nagios-plugins.git		&&	\
 	cd nagios-plugins					&&	\
-	git checkout tags/release-2.1.2				&&	\
-	patch ./plugins/check_game.c /tmp/check_game.patch	&&	\
+	git checkout tags/release-2.1.3				&&	\
 	./tools/setup						&&	\
 	./configure							\
 		--prefix=${NAGIOS_HOME}				&&	\
@@ -114,7 +112,7 @@ RUN	cd /tmp							&&	\
 RUN	cd /tmp							&&	\
 	git clone https://github.com/NagiosEnterprises/nrpe.git	&&	\
 	cd nrpe							&&	\
-	git checkout tags/3.0					&&	\
+	git checkout tags/3.0.1					&&	\
 	./configure							\
 		--with-ssl=/usr/bin/openssl				\
 		--with-ssl-lib=/usr/lib/x86_64-linux-gnu	&&	\
