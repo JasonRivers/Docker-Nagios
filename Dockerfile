@@ -59,7 +59,9 @@ RUN	sed -i 's/universe/universe multiverse/' /etc/apt/sources.list	;\
 		libdbi-perl						\
 		libnet-tftp-perl					\
 		libredis-perl						\
-		libswitch-perl					&&	\
+		libswitch-perl						\
+		libwww-perl							\
+		libjson-perl					&&	\
 		apt-get clean
 
 RUN	( egrep -i "^${NAGIOS_GROUP}"    /etc/group || groupadd $NAGIOS_GROUP    )				&&	\
@@ -132,7 +134,7 @@ RUN	cd /tmp											&&	\
 	cp share/nagiosgraph.ssi ${NAGIOS_HOME}/share/ssi/common-header.ssi
 
 RUN cd /opt &&		\
-	git clone https://github.com/willixix/WL-NagiosPlugins.git	WL-Nagios-Plugins	&&	\
+	git clone https://github.com/willixix/naglio-plugins.git	WL-Nagios-Plugins	&&	\
 	git clone https://github.com/JasonRivers/nagios-plugins.git	JR-Nagios-Plugins	&&	\
 	git clone https://github.com/justintime/nagios-plugins.git      JE-Nagios-Plugins       &&      \
 	chmod +x /opt/WL-Nagios-Plugins/check*                                                  &&      \
@@ -171,6 +173,12 @@ ADD nagios/cgi.cfg /opt/nagios/etc/cgi.cfg
 ADD nagios/templates.cfg /opt/nagios/etc/objects/templates.cfg
 ADD nagios/commands.cfg /opt/nagios/etc/objects/commands.cfg
 ADD nagios/localhost.cfg /opt/nagios/etc/objects/localhost.cfg
+
+# Copy example config in-case the user has started with empty var or etc
+
+RUN mkdir -p /orig/var && mkdir -p /orig/etc				&&	\
+	cp -Rp /opt/nagios/var/* /orig/var/					&&	\
+	cp -Rp /opt/nagios/etc/* /orig/etc/
 
 ADD nagios.init /etc/sv/nagios/run
 ADD apache.init /etc/sv/apache/run
