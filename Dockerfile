@@ -81,7 +81,7 @@ RUN	cd /tmp							&&	\
 RUN	cd /tmp							&&	\
 	git clone https://github.com/NagiosEnterprises/nagioscore.git		&&	\
 	cd nagioscore						&&	\
-	git checkout tags/nagios-4.2.2				&&	\
+	git checkout tags/release-4.2.3				&&	\
 	./configure							\
 		--prefix=${NAGIOS_HOME}					\
 		--exec-prefix=${NAGIOS_HOME}				\
@@ -101,7 +101,7 @@ RUN	cd /tmp							&&	\
 RUN	cd /tmp							&&	\
 	git clone https://github.com/nagios-plugins/nagios-plugins.git		&&	\
 	cd nagios-plugins					&&	\
-	git checkout tags/release-2.1.3				&&	\
+	git checkout tags/release-2.1.4				&&	\
 	./tools/setup						&&	\
 	./configure							\
 		--prefix=${NAGIOS_HOME}				&&	\
