@@ -37,6 +37,10 @@ Note: The path for the custom plugins will be /opt/Custom-Nagios-Plugins, you wi
 
 For best results your Nagios image should have access to both IPv4 & IPv6 networks 
 
+#### Credentials
+
+The default credentials for the web interface is `nagiosadmin` / `nagios`
+
 ### Extra Plugins
 
 * Nagios nrpe [http://exchange.nagios.org/directory/Addons/Monitoring-Agents/NRPE--2D-Nagios-Remote-Plugin-Executor/details]
