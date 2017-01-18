@@ -79,9 +79,8 @@ RUN	cd /tmp							&&	\
 	make clean
 
 RUN	cd /tmp							&&	\
-	git clone https://github.com/NagiosEnterprises/nagioscore.git		&&	\
+	git clone https://github.com/NagiosEnterprises/nagioscore.git -b release-4.2.4		&&	\
 	cd nagioscore						&&	\
-	git checkout tags/release-4.2.4				&&	\
 	./configure							\
 		--prefix=${NAGIOS_HOME}					\
 		--exec-prefix=${NAGIOS_HOME}				\
@@ -99,9 +98,8 @@ RUN	cd /tmp							&&	\
 	make clean
 
 RUN	cd /tmp							&&	\
-	git clone https://github.com/nagios-plugins/nagios-plugins.git		&&	\
+	git clone https://github.com/nagios-plugins/nagios-plugins.git -b release-2.1.4		&&	\
 	cd nagios-plugins					&&	\
-	git checkout tags/release-2.1.4				&&	\
 	./tools/setup						&&	\
 	./configure							\
 		--prefix=${NAGIOS_HOME}				&&	\
@@ -112,9 +110,8 @@ RUN	cd /tmp							&&	\
 	ln -sf /opt/nagios/libexec/utils.pm /usr/lib/nagios/plugins
 
 RUN	cd /tmp							&&	\
-	git clone https://github.com/NagiosEnterprises/nrpe.git	&&	\
+	git clone https://github.com/NagiosEnterprises/nrpe.git	-b 3.0.1	&&	\
 	cd nrpe							&&	\
-	git checkout tags/3.0.1					&&	\
 	./configure							\
 		--with-ssl=/usr/bin/openssl				\
 		--with-ssl-lib=/usr/lib/x86_64-linux-gnu	&&	\
