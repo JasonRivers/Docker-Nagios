@@ -146,13 +146,10 @@ RUN	export DOC_ROOT="DocumentRoot $(echo $NAGIOS_HOME/share)"					&&	\
 	sed -i "s,</VirtualHost>,<IfDefine ENABLE_USR_LIB_CGI_BIN>\nScriptAlias /cgi-bin/ /opt/nagios/sbin/\n</IfDefine>\n</VirtualHost>," /etc/apache2/sites-enabled/000-default.conf	&&	\
 	ln -s /etc/apache2/mods-available/cgi.load /etc/apache2/mods-enabled/cgi.load
 
-RUN	mkdir -p /usr/share/snmp/mibs								&&	\
-	mkdir -p ${NAGIOS_HOME}/etc/conf.d							&&	\
-	mkdir -p ${NAGIOS_HOME}/etc/monitor							&&	\
-	mkdir -p ${NAGIOS_HOME}/.ssh								&&	\
+RUN	mkdir -p -m 0755 /usr/share/snmp/mibs							&&	\
+	mkdir -p         ${NAGIOS_HOME}/etc/{conf.d,monitor}					&&	\
+	mkdir -p -m 700  ${NAGIOS_HOME}/.ssh							&&	\
 	chown ${NAGIOS_USER}:${NAGIOS_GROUP} ${NAGIOS_HOME}/.ssh				&&	\
-	chmod 700 ${NAGIOS_HOME}/.ssh								&&	\
-	chmod 0755 /usr/share/snmp/mibs								&&	\
 	touch /usr/share/snmp/mibs/.foo								&&	\
 	ln -s /usr/share/snmp/mibs ${NAGIOS_HOME}/libexec/mibs					&&	\
 	ln -s ${NAGIOS_HOME}/bin/nagios /usr/local/bin/nagios					&&	\
