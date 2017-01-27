@@ -147,7 +147,8 @@ RUN	export DOC_ROOT="DocumentRoot $(echo $NAGIOS_HOME/share)"					&&	\
 	ln -s /etc/apache2/mods-available/cgi.load /etc/apache2/mods-enabled/cgi.load
 
 RUN	mkdir -p -m 0755 /usr/share/snmp/mibs							&&	\
-	mkdir -p         ${NAGIOS_HOME}/etc/{conf.d,monitor}					&&	\
+	mkdir -p         ${NAGIOS_HOME}/etc/conf.d						&&	\
+	mkdir -p         ${NAGIOS_HOME}/etc/monitor						&&	\
 	mkdir -p -m 700  ${NAGIOS_HOME}/.ssh							&&	\
 	chown ${NAGIOS_USER}:${NAGIOS_GROUP} ${NAGIOS_HOME}/.ssh				&&	\
 	touch /usr/share/snmp/mibs/.foo								&&	\
