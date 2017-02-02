@@ -98,7 +98,7 @@ RUN	cd /tmp							&&	\
 	make clean
 
 RUN	cd /tmp							&&	\
-	git clone https://github.com/nagios-plugins/nagios-plugins.git -b release-2.1.4		&&	\
+	git clone https://github.com/nagios-plugins/nagios-plugins.git -b release-2.2.0	&&	\
 	cd nagios-plugins					&&	\
 	./tools/setup						&&	\
 	./configure							\
