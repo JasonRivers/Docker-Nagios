@@ -69,7 +69,7 @@ RUN	( egrep -i "^${NAGIOS_GROUP}"    /etc/group || groupadd $NAGIOS_GROUP    )		
 RUN	( id -u $NAGIOS_USER    || useradd --system -d $NAGIOS_HOME -g $NAGIOS_GROUP    $NAGIOS_USER    )	&&	\
 	( id -u $NAGIOS_CMDUSER || useradd --system -d $NAGIOS_HOME -g $NAGIOS_CMDGROUP $NAGIOS_CMDUSER )
 
-RUN	cd /tmp							&&	\
+RUN	cd $TMPDIR						&&	\
 	git clone https://github.com/multiplay/qstat.git	&&	\
 	cd qstat						&&	\
 	./autogen.sh						&&	\
@@ -78,7 +78,7 @@ RUN	cd /tmp							&&	\
 	make install						&&	\
 	make clean
 
-RUN	cd /tmp							&&	\
+RUN	cd $TMPDIR						&&	\
 	git clone https://github.com/NagiosEnterprises/nagioscore.git -b release-4.2.4		&&	\
 	cd nagioscore						&&	\
 	./configure							\
@@ -97,7 +97,7 @@ RUN	cd /tmp							&&	\
 	ln -s /etc/apache2/conf-available/nagios.conf /etc/apache2/conf-enabled/nagios.conf		&&	\
 	make clean
 
-RUN	cd /tmp							&&	\
+RUN	cd $TMPDIR						&&	\
 	git clone https://github.com/nagios-plugins/nagios-plugins.git -b release-2.1.4		&&	\
 	cd nagios-plugins					&&	\
 	./tools/setup						&&	\
@@ -109,7 +109,7 @@ RUN	cd /tmp							&&	\
 	mkdir -p /usr/lib/nagios/plugins	&&	\
 	ln -sf /opt/nagios/libexec/utils.pm /usr/lib/nagios/plugins
 
-RUN	cd /tmp							&&	\
+RUN	cd $TMPDIR						&&	\
 	git clone https://github.com/NagiosEnterprises/nrpe.git	-b 3.0.1	&&	\
 	cd nrpe							&&	\
 	./configure							\
@@ -119,7 +119,7 @@ RUN	cd /tmp							&&	\
 	cp src/check_nrpe ${NAGIOS_HOME}/libexec/		&&	\
 	make clean
 
-RUN	cd /tmp											&&	\
+RUN	cd $TMPDIR										&&	\
 	git clone http://git.code.sf.net/p/nagiosgraph/git nagiosgraph				&&	\
 	cd nagiosgraph										&&	\
 	./install.pl --install										\
