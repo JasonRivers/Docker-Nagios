@@ -21,6 +21,7 @@ ENV NG_CGI_URL			/cgi-bin
 RUN	sed -i 's/universe/universe multiverse/' /etc/apt/sources.list	;\
 	apt-get update && apt-get install -y				\
 		iputils-ping						\
+		dnsutils						\
 		netcat							\
 		build-essential						\
 		automake						\
@@ -98,7 +99,7 @@ RUN	cd /tmp							&&	\
 	make clean
 
 RUN	cd /tmp							&&	\
-	git clone https://github.com/nagios-plugins/nagios-plugins.git -b release-2.1.4		&&	\
+	git clone https://github.com/nagios-plugins/nagios-plugins.git -b release-2.2.0	&&	\
 	cd nagios-plugins					&&	\
 	./tools/setup						&&	\
 	./configure							\
