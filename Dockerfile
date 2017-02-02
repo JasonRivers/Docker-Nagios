@@ -21,6 +21,7 @@ ENV NG_CGI_URL			/cgi-bin
 RUN	sed -i 's/universe/universe multiverse/' /etc/apt/sources.list	;\
 	apt-get update && apt-get install -y				\
 		iputils-ping						\
+		dnsutils						\
 		netcat							\
 		build-essential						\
 		automake						\
