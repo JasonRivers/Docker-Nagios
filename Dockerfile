@@ -120,7 +120,7 @@ RUN	cd /tmp							&&	\
 	make clean
 
 RUN	cd /tmp											&&	\
-	git clone http://git.code.sf.net/p/nagiosgraph/git nagiosgraph				&&	\
+	git clone https://git.code.sf.net/p/nagiosgraph/git nagiosgraph				&&	\
 	cd nagiosgraph										&&	\
 	./install.pl --install										\
 		--prefix /opt/nagiosgraph								\
