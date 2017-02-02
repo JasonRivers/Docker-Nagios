@@ -85,7 +85,7 @@ RUN	cd /tmp							&&	\
 		--prefix=${NAGIOS_HOME}					\
 		--exec-prefix=${NAGIOS_HOME}				\
 		--enable-event-broker					\
-		--with-nagios-command-user=${NAGIOS_CMDUSER}		\
+		--with-command-user=${NAGIOS_CMDUSER}			\
 		--with-command-group=${NAGIOS_CMDGROUP}			\
 		--with-nagios-user=${NAGIOS_USER}			\
 		--with-nagios-group=${NAGIOS_GROUP}		&&	\
