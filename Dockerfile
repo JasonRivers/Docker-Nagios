@@ -93,8 +93,7 @@ RUN	cd /tmp							&&	\
 	make install						&&	\
 	make install-config					&&	\
 	make install-commandmode				&&	\
-	cp sample-config/httpd.conf /etc/apache2/conf-available/nagios.conf	&&	\
-	ln -s /etc/apache2/conf-available/nagios.conf /etc/apache2/conf-enabled/nagios.conf		&&	\
+	make install-webconf					&&	\
 	make clean
 
 RUN	cd /tmp							&&	\
