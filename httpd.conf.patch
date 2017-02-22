@@ -1,0 +1,58 @@
+12c12
+< <Location "/nagios">
+---
+> <Directory "/opt/nagios/share">
+45c45
+< </Location>
+---
+> </Directory>
+47c47
+< <Location "/nagios/cgi-bin">
+---
+> <Directory "/opt/nagios/sbin">
+53,58c53,63
+< 			Require all granted
+< #			Require host 127.0.0.1
+< 			AuthName "Nagios Access"
+< 			AuthType Basic
+< 			AuthUserFile /opt/nagios/etc/htpasswd.users
+< 			Require valid-user
+---
+>                         Require all granted
+> #                       Require host 127.0.0.1
+>                         AuthName "Nagios Access"
+>                         AuthUserFile /opt/nagios/etc/htpasswd.users
+>                         AuthType form
+>                         AuthFormLoginRequiredLocation "/nagios/login.html"
+>                         Session On
+>                         SessionCookieName NagiosSession path=/nagios
+>                         SessionEnv On
+>                         SessionCryptoPassphrase ##SESSIONCRYPT##
+>                         Require valid-user
+62,70c67,78
+< 		Order allow,deny
+< 		Allow from all
+< #		Order deny,allow
+< #		Deny from all
+< #		Allow from 127.0.0.1
+< 		AuthName "Nagios Access"
+< 		AuthType Basic
+< 		AuthUserFile /opt/nagios/etc/htpasswd.users
+< 		Require valid-user
+---
+>                 Order allow,deny
+>                 Allow from all
+> #               Order deny,allow
+> #               Deny from all
+> #               Allow from 127.0.0.1
+>                 AuthType form
+>                 AuthFormLoginRequiredLocation "/nagios/login.html"
+>                 Session On
+>                 SessionCookieName NagiosSession path=/nagios
+>                 SessionEnv On
+>                 SessionCryptoPassphrase ##SESSIONCRYPT##
+>                 Require valid-user
+72c80
+< </Location>
+---
+> </Directory>

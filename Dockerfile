@@ -78,8 +78,16 @@ RUN	cd /tmp							&&	\
 	make install						&&	\
 	make clean
 
+## The httpd.conf file has a problem in 4.3.0
+## cgibin is not referenced as part of the authentication
+## cgi-bin is not using the new authentication system, it's still on "basic"
+## This means you get 2 authentications and it still doesn't work.
+## We will patch this to work as we install
+
+ADD httpd.conf.patch /tmp/
+	
 RUN	cd /tmp							&&	\
-	git clone https://github.com/NagiosEnterprises/nagioscore.git -b release-4.2.4		&&	\
+	git clone https://github.com/NagiosEnterprises/nagioscore.git -b release-4.3.0		&&	\
 	cd nagioscore						&&	\
 	./configure							\
 		--prefix=${NAGIOS_HOME}					\
@@ -93,12 +101,14 @@ RUN	cd /tmp							&&	\
 	make install						&&	\
 	make install-config					&&	\
 	make install-commandmode				&&	\
-	cp sample-config/httpd.conf /etc/apache2/conf-available/nagios.conf	&&	\
-	ln -s /etc/apache2/conf-available/nagios.conf /etc/apache2/conf-enabled/nagios.conf		&&	\
+	SESSIONCRYPT=`cat /tmp/nagioscore/sample-config/httpd.conf | awk '/SessionCryptoPassphrase/ {print $2}' | tail -1`		&& \
+	sed -i "s/##SESSIONCRYPT##/${SESSIONCRYPT}/g" /tmp/httpd.conf.patch		&& \
+	patch sample-config/httpd.conf /tmp/httpd.conf.patch	&&	\
+	make install-webconf					&&	\
 	make clean
 
 RUN	cd /tmp							&&	\
-	git clone https://github.com/nagios-plugins/nagios-plugins.git -b release-2.1.4		&&	\
+	git clone https://github.com/nagios-plugins/nagios-plugins.git -b release-2.2.0		&&	\
 	cd nagios-plugins					&&	\
 	./tools/setup						&&	\
 	./configure							\
@@ -174,6 +184,12 @@ ADD nagios/localhost.cfg /opt/nagios/etc/objects/localhost.cfg
 RUN mkdir -p /orig/var && mkdir -p /orig/etc				&&	\
 	cp -Rp /opt/nagios/var/* /orig/var/					&&	\
 	cp -Rp /opt/nagios/etc/* /orig/etc/
+
+RUN a2enmod session					&&\
+    a2enmod session_cookie				&&\
+    a2enmod session_crypto				&&\
+    a2enmod auth_form					&&\
+    a2enmod request
 
 ADD nagios.init /etc/sv/nagios/run
 ADD apache.init /etc/sv/apache/run
