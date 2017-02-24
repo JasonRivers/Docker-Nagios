@@ -87,7 +87,7 @@ RUN	cd /tmp							&&	\
 ADD httpd.conf.patch /tmp/
 	
 RUN	cd /tmp							&&	\
-	git clone https://github.com/NagiosEnterprises/nagioscore.git -b release-4.3.0		&&	\
+	git clone https://github.com/NagiosEnterprises/nagioscore.git -b nagios-4.3.1		&&	\
 	cd nagioscore						&&	\
 	./configure							\
 		--prefix=${NAGIOS_HOME}					\
@@ -102,8 +102,6 @@ RUN	cd /tmp							&&	\
 	make install-config					&&	\
 	make install-commandmode				&&	\
 	SESSIONCRYPT=`cat /tmp/nagioscore/sample-config/httpd.conf | awk '/SessionCryptoPassphrase/ {print $2}' | tail -1`		&& \
-	sed -i "s/##SESSIONCRYPT##/${SESSIONCRYPT}/g" /tmp/httpd.conf.patch		&& \
-	patch sample-config/httpd.conf /tmp/httpd.conf.patch	&&	\
 	make install-webconf					&&	\
 	make clean
 
