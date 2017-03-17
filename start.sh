@@ -30,7 +30,7 @@ shutdown() {
   # give stuff a bit of time to finish
   sleep 1
 
-  ORPHANS=$(ps -eo pid= | tr -d ' ' | grep -Fv 1)
+  ORPHANS=$(ps -eo pid= | tr -d ' ' | grep -Fxv 1)
   SHELL=/bin/bash parallel --no-notice 'timeout 5 /bin/bash -c "kill {} && wait {}" || kill -9 {}' ::: $ORPHANS 2> /dev/null
   exit
 }
