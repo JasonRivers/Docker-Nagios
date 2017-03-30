@@ -22,6 +22,7 @@ RUN	sed -i 's/universe/universe multiverse/' /etc/apt/sources.list	;\
 	apt-get update && apt-get install -y				\
 		iputils-ping						\
 		netcat							\
+		dnsutils						\
 		build-essential						\
 		automake						\
 		autoconf						\
