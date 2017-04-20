@@ -6,6 +6,7 @@ ENV NAGIOS_USER			nagios
 ENV NAGIOS_GROUP		nagios
 ENV NAGIOS_CMDUSER		nagios
 ENV NAGIOS_CMDGROUP		nagios
+ENV NAGIOS_FQDN			nagios.example.com
 ENV NAGIOSADMIN_USER		nagiosadmin
 ENV NAGIOSADMIN_PASS		nagios
 ENV APACHE_RUN_USER		nagios
@@ -18,7 +19,10 @@ ENV NG_WWW_DIR			${NAGIOS_HOME}/share/nagiosgraph
 ENV NG_CGI_URL			/cgi-bin
 
 
-RUN	sed -i 's/universe/universe multiverse/' /etc/apt/sources.list	;\
+RUN	sed -i 's/universe/universe multiverse/' /etc/apt/sources.list	&& \
+	echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set-selections && \
+	echo postfix postfix/mynetworks string "127.0.0.0/8" | debconf-set-selections && \
+	echo postfix postfix/mailname string ${NAGIOS_FQDN} | debconf-set-selections && \
 	apt-get update && apt-get install -y				\
 		iputils-ping						\
 		netcat							\
@@ -119,7 +123,7 @@ RUN	cd /tmp							&&	\
 	ln -sf /opt/nagios/libexec/utils.pm /usr/lib/nagios/plugins
 
 RUN	cd /tmp							&&	\
-	git clone https://github.com/NagiosEnterprises/nrpe.git	-b 3.1.0	&&	\
+	git clone https://github.com/NagiosEnterprises/nrpe.git	-b release-3.1.0	&&	\
 	cd nrpe							&&	\
 	./configure							\
 		--with-ssl=/usr/bin/openssl				\
