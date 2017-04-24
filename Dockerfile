@@ -202,7 +202,7 @@ RUN a2enmod session					&&\
 ADD nagios.init /etc/sv/nagios/run
 ADD apache.init /etc/sv/apache/run
 ADD postfix.init /etc/sv/postfix/run
-ADD rsyslog.init /etc/sv/postfix/run
+ADD rsyslog.init /etc/sv/rsyslog/run
 ADD start.sh /usr/local/bin/start_nagios
 RUN chmod +x /usr/local/bin/start_nagios
 
