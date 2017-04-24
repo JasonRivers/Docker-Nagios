@@ -185,6 +185,8 @@ ADD nagios/localhost.cfg /opt/nagios/etc/objects/localhost.cfg
 
 ADD rsyslog/rsyslog.conf /etc/rsyslog.conf
 
+RUN echo "use_timezone=${NAGIOS_TIMEZONE}" >> /opt/nagios/etc/nagios.cfg
+
 # Copy example config in-case the user has started with empty var or etc
 
 RUN mkdir -p /orig/var && mkdir -p /orig/etc				&&	\
@@ -210,9 +212,11 @@ RUN ln -s /etc/sv/* /etc/service
 ENV APACHE_LOCK_DIR /var/run
 ENV APACHE_LOG_DIR /var/log/apache2
 
-#Set ServerName for Apache
-RUN echo "ServerName nagiosdocker" > /etc/apache2/conf-available/servername.conf	&& \
-    ln -s /etc/apache2/conf-available/servername.conf /etc/apache2/conf-enabled/servername.conf
+#Set ServerName and timezone for Apache
+RUN echo "ServerName ${NAGIOS_FQDN}" > /etc/apache2/conf-available/servername.conf	&& \
+    echo "PassEnv TZ" > /etc/apache2/conf-available/timezone.conf			&& \
+    ln -s /etc/apache2/conf-available/servername.conf /etc/apache2/conf-enabled/servername.conf	&& \
+    ln -s /etc/apache2/conf-available/timezone.conf /etc/apache2/conf-enabled/timezone.conf
 
 EXPOSE 80
 
