@@ -46,6 +46,7 @@ RUN	sed -i 's/universe/universe multiverse/' /etc/apt/sources.list	&& \
 		unzip							\
 		bc							\
 		postfix							\
+		rsyslog							\
 		bsd-mailx						\
 		libnet-snmp-perl					\
 		git							\
@@ -174,6 +175,8 @@ RUN	sed -i 's,/bin/mail,/usr/bin/mail,' /opt/nagios/etc/objects/commands.cfg		&&
 
 RUN	cp /etc/services /var/spool/postfix/etc/
 
+RUN	rm -rf /etc/rsyslog.d /etc/rsyslog.conf
+
 RUN	rm -rf /etc/sv/getty-5
 
 ADD nagios/nagios.cfg /opt/nagios/etc/nagios.cfg
@@ -181,6 +184,8 @@ ADD nagios/cgi.cfg /opt/nagios/etc/cgi.cfg
 ADD nagios/templates.cfg /opt/nagios/etc/objects/templates.cfg
 ADD nagios/commands.cfg /opt/nagios/etc/objects/commands.cfg
 ADD nagios/localhost.cfg /opt/nagios/etc/objects/localhost.cfg
+
+ADD rsyslog/rsyslog.conf /etc/rsyslog.conf
 
 # Copy example config in-case the user has started with empty var or etc
 
@@ -197,6 +202,7 @@ RUN a2enmod session					&&\
 ADD nagios.init /etc/sv/nagios/run
 ADD apache.init /etc/sv/apache/run
 ADD postfix.init /etc/sv/postfix/run
+ADD rsyslog.init /etc/sv/postfix/run
 ADD start.sh /usr/local/bin/start_nagios
 RUN chmod +x /usr/local/bin/start_nagios
 
