@@ -84,17 +84,15 @@ RUN	cd /tmp							&&	\
 	make install						&&	\
 	make clean
 
-## The httpd.conf file has a problem in 4.3.0
-## cgibin is not referenced as part of the authentication
-## cgi-bin is not using the new authentication system, it's still on "basic"
-## This means you get 2 authentications and it still doesn't work.
-## We will patch this to work as we install
+## Nagios 4.3.1 has leftover debug code which spams syslog every 15 seconds
+## Its fixed in 4.3.2 and the patch can be removed then
 
-ADD httpd.conf.patch /tmp/
+ADD nagios-core-4.3.1-fix-upstream-issue-337.patch /tmp/
 	
 RUN	cd /tmp							&&	\
 	git clone https://github.com/NagiosEnterprises/nagioscore.git -b nagios-4.3.1		&&	\
 	cd nagioscore						&&	\
+	patch -p1 < /tmp/nagios-core-4.3.1-fix-upstream-issue-337.patch	&&	\
 	./configure							\
 		--prefix=${NAGIOS_HOME}					\
 		--exec-prefix=${NAGIOS_HOME}				\
@@ -107,7 +105,6 @@ RUN	cd /tmp							&&	\
 	make install						&&	\
 	make install-config					&&	\
 	make install-commandmode				&&	\
-	SESSIONCRYPT=`cat /tmp/nagioscore/sample-config/httpd.conf | awk '/SessionCryptoPassphrase/ {print $2}' | tail -1`		&& \
 	make install-webconf					&&	\
 	make clean
 
