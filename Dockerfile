@@ -46,6 +46,7 @@ RUN	sed -i 's/universe/universe multiverse/' /etc/apt/sources.list	&& \
 		unzip							\
 		bc							\
 		postfix							\
+		rsyslog							\
 		bsd-mailx						\
 		libnet-snmp-perl					\
 		git							\
@@ -83,17 +84,15 @@ RUN	cd /tmp							&&	\
 	make install						&&	\
 	make clean
 
-## The httpd.conf file has a problem in 4.3.0
-## cgibin is not referenced as part of the authentication
-## cgi-bin is not using the new authentication system, it's still on "basic"
-## This means you get 2 authentications and it still doesn't work.
-## We will patch this to work as we install
+## Nagios 4.3.1 has leftover debug code which spams syslog every 15 seconds
+## Its fixed in 4.3.2 and the patch can be removed then
 
-ADD httpd.conf.patch /tmp/
+ADD nagios-core-4.3.1-fix-upstream-issue-337.patch /tmp/
 	
 RUN	cd /tmp							&&	\
 	git clone https://github.com/NagiosEnterprises/nagioscore.git -b nagios-4.3.1		&&	\
 	cd nagioscore						&&	\
+	patch -p1 < /tmp/nagios-core-4.3.1-fix-upstream-issue-337.patch	&&	\
 	./configure							\
 		--prefix=${NAGIOS_HOME}					\
 		--exec-prefix=${NAGIOS_HOME}				\
@@ -106,7 +105,6 @@ RUN	cd /tmp							&&	\
 	make install						&&	\
 	make install-config					&&	\
 	make install-commandmode				&&	\
-	SESSIONCRYPT=`cat /tmp/nagioscore/sample-config/httpd.conf | awk '/SessionCryptoPassphrase/ {print $2}' | tail -1`		&& \
 	make install-webconf					&&	\
 	make clean
 
@@ -172,7 +170,10 @@ RUN	mkdir -p -m 0755 /usr/share/snmp/mibs							&&	\
 RUN	sed -i 's,/bin/mail,/usr/bin/mail,' /opt/nagios/etc/objects/commands.cfg		&&	\
 	sed -i 's,/usr/usr,/usr,'           /opt/nagios/etc/objects/commands.cfg
 
-RUN	cp /etc/services /var/spool/postfix/etc/
+RUN	cp /etc/services /var/spool/postfix/etc/	&&\
+	echo "smtp_address_preference = ipv4" >> /etc/postfix/main.cf
+
+RUN	rm -rf /etc/rsyslog.d /etc/rsyslog.conf
 
 RUN	rm -rf /etc/sv/getty-5
 
@@ -181,6 +182,10 @@ ADD nagios/cgi.cfg /opt/nagios/etc/cgi.cfg
 ADD nagios/templates.cfg /opt/nagios/etc/objects/templates.cfg
 ADD nagios/commands.cfg /opt/nagios/etc/objects/commands.cfg
 ADD nagios/localhost.cfg /opt/nagios/etc/objects/localhost.cfg
+
+ADD rsyslog/rsyslog.conf /etc/rsyslog.conf
+
+RUN echo "use_timezone=${NAGIOS_TIMEZONE}" >> /opt/nagios/etc/nagios.cfg
 
 # Copy example config in-case the user has started with empty var or etc
 
@@ -197,6 +202,7 @@ RUN a2enmod session					&&\
 ADD nagios.init /etc/sv/nagios/run
 ADD apache.init /etc/sv/apache/run
 ADD postfix.init /etc/sv/postfix/run
+ADD rsyslog.init /etc/sv/rsyslog/run
 ADD start.sh /usr/local/bin/start_nagios
 RUN chmod +x /usr/local/bin/start_nagios
 
@@ -206,9 +212,11 @@ RUN ln -s /etc/sv/* /etc/service
 ENV APACHE_LOCK_DIR /var/run
 ENV APACHE_LOG_DIR /var/log/apache2
 
-#Set ServerName for Apache
-RUN echo "ServerName nagiosdocker" > /etc/apache2/conf-available/servername.conf	&& \
-    ln -s /etc/apache2/conf-available/servername.conf /etc/apache2/conf-enabled/servername.conf
+#Set ServerName and timezone for Apache
+RUN echo "ServerName ${NAGIOS_FQDN}" > /etc/apache2/conf-available/servername.conf	&& \
+    echo "PassEnv TZ" > /etc/apache2/conf-available/timezone.conf			&& \
+    ln -s /etc/apache2/conf-available/servername.conf /etc/apache2/conf-enabled/servername.conf	&& \
+    ln -s /etc/apache2/conf-available/timezone.conf /etc/apache2/conf-enabled/timezone.conf
 
 EXPOSE 80
 
