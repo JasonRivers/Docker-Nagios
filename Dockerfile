@@ -87,12 +87,10 @@ RUN	cd /tmp							&&	\
 ## Nagios 4.3.1 has leftover debug code which spams syslog every 15 seconds
 ## Its fixed in 4.3.2 and the patch can be removed then
 
-ADD nagios-core-4.3.1-fix-upstream-issue-337.patch /tmp/
 	
 RUN	cd /tmp							&&	\
-	git clone https://github.com/NagiosEnterprises/nagioscore.git -b nagios-4.3.1		&&	\
+	git clone https://github.com/NagiosEnterprises/nagioscore.git -b nagios-4.3.2		&&	\
 	cd nagioscore						&&	\
-	patch -p1 < /tmp/nagios-core-4.3.1-fix-upstream-issue-337.patch	&&	\
 	./configure							\
 		--prefix=${NAGIOS_HOME}					\
 		--exec-prefix=${NAGIOS_HOME}				\
@@ -121,7 +119,7 @@ RUN	cd /tmp							&&	\
 	ln -sf /opt/nagios/libexec/utils.pm /usr/lib/nagios/plugins
 
 RUN	cd /tmp							&&	\
-	git clone https://github.com/NagiosEnterprises/nrpe.git	-b release-3.1.0	&&	\
+	git clone https://github.com/NagiosEnterprises/nrpe.git	-b nrpe-3.1.0	&&	\
 	cd nrpe							&&	\
 	./configure							\
 		--with-ssl=/usr/bin/openssl				\
