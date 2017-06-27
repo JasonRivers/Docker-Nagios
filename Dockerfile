@@ -55,6 +55,7 @@ RUN	sed -i 's/universe/universe multiverse/' /etc/apt/sources.list	&& \
 		librrds-perl						\
 		libgd-gd2-perl						\
 		libnagios-object-perl					\
+		libnagios-plugin-perl					\
 		fping							\
 		libfreeradius-client-dev				\
 		libnet-snmp-perl					\
