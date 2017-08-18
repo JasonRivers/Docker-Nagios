@@ -4,6 +4,7 @@
 sed -i "s/relayhost =.*/relayhost = ${MAIL_RELAY_HOST}/" /etc/postfix/main.cf
 sed -i "s/myhostname =.*/myhostname = `hostname`/" /etc/postfix/main.cf
 sed -i "s/mydestination =.*/mydestination = ${NAGIOS_FQDN}, \$myhostname, localhost.localdomain, localhost/" /etc/postfix/main.cf
+sed -i "s/inet_protocols =.*/inet_protocols = ipv4/" /etc/postfix/main.cf
 
 sed -i "/^myorigin =.*/d" /etc/postfix/main.cf
 echo "${NAGIOS_FQDN}" > /etc/mailname
