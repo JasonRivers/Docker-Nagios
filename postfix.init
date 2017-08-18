@@ -1,9 +1,7 @@
 #!/bin/bash
 
-: ${MAIL_SERVER=$MAIL_PORT_25_TCP_ADDR}
 
-
-sed -i "s/relayhost =.*/relayhost = ${MAIL_SERVER}/" /etc/postfix/main.cf
+sed -i "s/relayhost =.*/relayhost = ${MAIL_RELAY_HOST}/" /etc/postfix/main.cf
 sed -i "s/myhostname =.*/myhostname = `hostname`/" /etc/postfix/main.cf
 sed -i "s/mydestination =.*/mydestination = ${NAGIOS_FQDN}, \$myhostname, localhost.localdomain, localhost/" /etc/postfix/main.cf
 
