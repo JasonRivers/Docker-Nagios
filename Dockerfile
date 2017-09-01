@@ -22,8 +22,7 @@ ENV NAGIOS_PLUGINS_BRANCH  release-2.2.1
 ENV NRPE_BRANCH            nrpe-3.1.1
 
 
-RUN sed -i 's/universe/universe multiverse/' /etc/apt/sources.list                           && \
-    echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set-selections  && \
+RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set-selections  && \
     echo postfix postfix/mynetworks string "127.0.0.0/8" | debconf-set-selections            && \
     echo postfix postfix/mailname string ${NAGIOS_FQDN} | debconf-set-selections             && \
     apt-get update && apt-get install -y   \
