@@ -3,6 +3,6 @@
 
 . /etc/default/apache-htcacheclean
 
-export TZ=${NAGIOS_TIMEZONE}
+export TZ="${NAGIOS_TIMEZONE}"
 
 exec /usr/sbin/apache2 -D NO_DETACH
