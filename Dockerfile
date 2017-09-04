@@ -71,8 +71,8 @@ RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set
         libswitch-perl                     \
         libwww-perl                        \
         libjson-perl                       \
-                                                                                             && \
-    apt-get clean
+                                        && \
+    apt-get clean && rm -Rf /var/lib/apt/lists/*
 
 RUN ( egrep -i "^${NAGIOS_GROUP}"    /etc/group || groupadd $NAGIOS_GROUP    )                         && \
     ( egrep -i "^${NAGIOS_CMDGROUP}" /etc/group || groupadd $NAGIOS_CMDGROUP )
