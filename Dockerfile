@@ -75,6 +75,7 @@ RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set
         snmpd                               \
         snmp-mibs-downloader                \
         unzip                               \
+        python                              \
                                                 && \
     apt-get clean && rm -Rf /var/lib/apt/lists/*
 
@@ -127,6 +128,9 @@ RUN cd /tmp                                                                     
     make clean                                                                                && \
     mkdir -p /usr/lib/nagios/plugins                                                          && \
     ln -sf /opt/nagios/libexec/utils.pm /usr/lib/nagios/plugins
+
+RUN wget -O /opt/nagios/libexec/check_ncpa.py https://raw.githubusercontent.com/NagiosEnterprises/ncpa/v2.0.5/client/check_ncpa.py  && \
+    chmod +x /opt/nagios/libexec/check_ncpa.py
 
 RUN cd /tmp                                                                  && \
     git clone https://github.com/NagiosEnterprises/nrpe.git -b $NRPE_BRANCH  && \
