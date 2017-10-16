@@ -16,7 +16,7 @@ fi
 
 if [ ! -f "${NAGIOS_HOME}/etc/htpasswd.users" ] ; then
   htpasswd -c -b -s "${NAGIOS_HOME}/etc/htpasswd.users" "${NAGIOSADMIN_USER}" "${NAGIOSADMIN_PASS}"
-  chown -R nagios.nagios "${NAGIOS_HOME}/etc/htpasswd.users"
+  chown -R ${NAGIOS_USER}.${NAGIOS_GROUP} "${NAGIOS_HOME}/etc/htpasswd.users"
 fi
 
 shutdown() {
