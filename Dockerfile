@@ -37,7 +37,6 @@ RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set
         fping                               \
         gettext                             \
         git                                 \
-        golang                              \
         gperf                               \
         iputils-ping                        \
         libapache2-mod-php                  \
@@ -155,12 +154,6 @@ RUN cd /tmp                                                          && \
         --nagios-cgi-url /cgi-bin                               \
                                                                      && \
     cp share/nagiosgraph.ssi ${NAGIOS_HOME}/share/ssi/common-header.ssi
-
-RUN cd /opt                                                         && \
-    $GOPATH=/opt/nagflux/gorepo                                     && \
-    mkdir -p $GOPATH                                                && \
-    go get -u github.com/griesbacher/nagflux                        && \
-    go build github.com/griesbacher/nagflux
 
 RUN cd /opt                                                                         && \
     git clone https://github.com/willixix/naglio-plugins.git     WL-Nagios-Plugins  && \
