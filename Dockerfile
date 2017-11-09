@@ -72,6 +72,7 @@ RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set
         python-pip                          \
         rsyslog                             \
         runit                               \
+        smbclient                           \
         snmp                                \
         snmpd                               \
         snmp-mibs-downloader                \
