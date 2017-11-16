@@ -225,6 +225,13 @@ ADD rsyslog.init /etc/sv/rsyslog/run
 ADD start.sh /usr/local/bin/start_nagios
 RUN chmod +x /usr/local/bin/start_nagios
 
+ADD fix-nagiosgraph-multiple-selection.sh /opt/nagiosgraph/etc
+
+RUN cd /opt/nagiosgraph/etc && \
+    sh fix-nagiosgraph-multiple-selection.sh
+
+RUN rm /opt/nagiosgraph/etc/fix-nagiosgraph-multiple-selection.sh
+
 # enable all runit services
 RUN ln -s /etc/sv/* /etc/service
 
