@@ -39,6 +39,7 @@ RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set
         git                                 \
         gperf                               \
         iputils-ping                        \
+        jq                                  \
         libapache2-mod-php                  \
         libcache-memcached-perl             \
         libcgi-pm-perl                      \
@@ -78,7 +79,6 @@ RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set
         snmp-mibs-downloader                \
         unzip                               \
         python                              \
-        jq                                  \
                                                 && \
     apt-get clean && rm -Rf /var/lib/apt/lists/*
 
