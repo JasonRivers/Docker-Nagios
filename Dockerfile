@@ -39,6 +39,7 @@ RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set
         git                                 \
         gperf                               \
         iputils-ping                        \
+        jq                                  \
         libapache2-mod-php                  \
         libcache-memcached-perl             \
         libcgi-pm-perl                      \
