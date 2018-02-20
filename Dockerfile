@@ -197,13 +197,7 @@ RUN rm -rf /etc/rsyslog.d /etc/rsyslog.conf
 
 RUN rm -rf /etc/sv/getty-5
 
-ADD nagios/nagios.cfg /opt/nagios/etc/nagios.cfg
-ADD nagios/cgi.cfg /opt/nagios/etc/cgi.cfg
-ADD nagios/templates.cfg /opt/nagios/etc/objects/templates.cfg
-ADD nagios/commands.cfg /opt/nagios/etc/objects/commands.cfg
-ADD nagios/localhost.cfg /opt/nagios/etc/objects/localhost.cfg
-
-ADD rsyslog/rsyslog.conf /etc/rsyslog.conf
+ADD overlay /
 
 RUN echo "use_timezone=${NAGIOS_TIMEZONE}" >> /opt/nagios/etc/nagios.cfg
 
@@ -219,14 +213,12 @@ RUN a2enmod session         && \
     a2enmod auth_form       && \
     a2enmod request
 
-ADD nagios.init /etc/sv/nagios/run
-ADD apache.init /etc/sv/apache/run
-ADD postfix.init /etc/sv/postfix/run
-ADD rsyslog.init /etc/sv/rsyslog/run
-ADD start.sh /usr/local/bin/start_nagios
-RUN chmod +x /usr/local/bin/start_nagios
-
-ADD fix-nagiosgraph-multiple-selection.sh /opt/nagiosgraph/etc
+RUN chmod +x /usr/local/bin/start_nagios        && \
+    chmod +x /etc/sv/apache/run                 && \
+    chmod +x /etc/sv/nagios/run                 && \
+    chmod +x /etc/sv/postfix/run                 && \
+    chmod +x /etc/sv/rsyslog/run                 && \
+    chmod +x /opt/nagiosgraph/etc/fix-nagiosgraph-multiple-selection.sh
 
 RUN cd /opt/nagiosgraph/etc && \
     sh fix-nagiosgraph-multiple-selection.sh
