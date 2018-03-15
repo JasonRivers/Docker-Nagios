@@ -20,6 +20,7 @@ ENV NG_CGI_URL             /cgi-bin
 ENV NAGIOS_BRANCH          nagios-4.3.4
 ENV NAGIOS_PLUGINS_BRANCH  release-2.2.1
 ENV NRPE_BRANCH            nrpe-3.2.1
+ENV NSCA_BRANCH            nsca-2.9.2
 
 
 RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set-selections  && \
@@ -144,6 +145,16 @@ RUN cd /tmp                                                                  && 
                                                                              && \
     make check_nrpe                                                          && \
     cp src/check_nrpe ${NAGIOS_HOME}/libexec/                                && \
+    make clean
+
+RUN cd /tmp                                                                 && \
+    git clone https://github.com/NagiosEnterprises/nsca.git -b $NSCA_BRANCH && \
+    cd nsca                                                                 && \
+    ./configure                                 \
+        --prefix=${NAGIOS_HOME}                                             && \
+    make                                                                    && \
+    cp src/nsca src/send_nsca ${NAGIOS_HOME}/bin                            && \
+    cp sample-config/nsca.cfg sample-config/send_nsca.cfg ${NAGIOS_HOME}/etc/ && \
     make clean
 
 RUN cd /tmp                                                          && \
