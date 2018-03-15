@@ -130,10 +130,10 @@ RUN cd /tmp                                                                     
     make install                                                                              && \
     make clean                                                                                && \
     mkdir -p /usr/lib/nagios/plugins                                                          && \
-    ln -sf /opt/nagios/libexec/utils.pm /usr/lib/nagios/plugins
+    ln -sf ${NAGIOS_HOME}/libexec/utils.pm /usr/lib/nagios/plugins
 
-RUN wget -O /opt/nagios/libexec/check_ncpa.py https://raw.githubusercontent.com/NagiosEnterprises/ncpa/v2.0.5/client/check_ncpa.py  && \
-    chmod +x /opt/nagios/libexec/check_ncpa.py
+RUN wget -O ${NAGIOS_HOME}/libexec/check_ncpa.py https://raw.githubusercontent.com/NagiosEnterprises/ncpa/v2.0.5/client/check_ncpa.py  && \
+    chmod +x ${NAGIOS_HOME}/libexec/check_ncpa.py
 
 RUN cd /tmp                                                                  && \
     git clone https://github.com/NagiosEnterprises/nrpe.git -b $NRPE_BRANCH  && \
@@ -166,15 +166,15 @@ RUN cd /opt                                                                     
     git clone https://github.com/nagiosenterprises/check_mssql_collection.git   nagios-mssql  && \
     chmod +x /opt/WL-Nagios-Plugins/check*                                          && \
     chmod +x /opt/JE-Nagios-Plugins/check_mem/check_mem.pl                          && \
-    cp /opt/JE-Nagios-Plugins/check_mem/check_mem.pl /opt/nagios/libexec/           && \
-    cp /opt/nagios-mssql/check_mssql_database.py /opt/nagios/libexec/                         && \
-    cp /opt/nagios-mssql/check_mssql_server.py /opt/nagios/libexec/
+    cp /opt/JE-Nagios-Plugins/check_mem/check_mem.pl ${NAGIOS_HOME}/libexec/           && \
+    cp /opt/nagios-mssql/check_mssql_database.py ${NAGIOS_HOME}/libexec/                         && \
+    cp /opt/nagios-mssql/check_mssql_server.py ${NAGIOS_HOME}/libexec/
 
 
 RUN sed -i.bak 's/.*\=www\-data//g' /etc/apache2/envvars
 RUN export DOC_ROOT="DocumentRoot $(echo $NAGIOS_HOME/share)"                         && \
     sed -i "s,DocumentRoot.*,$DOC_ROOT," /etc/apache2/sites-enabled/000-default.conf  && \
-    sed -i "s,</VirtualHost>,<IfDefine ENABLE_USR_LIB_CGI_BIN>\nScriptAlias /cgi-bin/ /opt/nagios/sbin/\n</IfDefine>\n</VirtualHost>," /etc/apache2/sites-enabled/000-default.conf  && \
+    sed -i "s,</VirtualHost>,<IfDefine ENABLE_USR_LIB_CGI_BIN>\nScriptAlias /cgi-bin/ ${NAGIOS_HOME}/sbin/\n</IfDefine>\n</VirtualHost>," /etc/apache2/sites-enabled/000-default.conf  && \
     ln -s /etc/apache2/mods-available/cgi.load /etc/apache2/mods-enabled/cgi.load
 
 RUN mkdir -p -m 0755 /usr/share/snmp/mibs                     && \
@@ -187,8 +187,8 @@ RUN mkdir -p -m 0755 /usr/share/snmp/mibs                     && \
     ln -s ${NAGIOS_HOME}/bin/nagios /usr/local/bin/nagios     && \
     download-mibs && echo "mibs +ALL" > /etc/snmp/snmp.conf
 
-RUN sed -i 's,/bin/mail,/usr/bin/mail,' /opt/nagios/etc/objects/commands.cfg  && \
-    sed -i 's,/usr/usr,/usr,'           /opt/nagios/etc/objects/commands.cfg
+RUN sed -i 's,/bin/mail,/usr/bin/mail,' ${NAGIOS_HOME}/etc/objects/commands.cfg  && \
+    sed -i 's,/usr/usr,/usr,'           ${NAGIOS_HOME}/etc/objects/commands.cfg
 
 RUN cp /etc/services /var/spool/postfix/etc/  && \
     echo "smtp_address_preference = ipv4" >> /etc/postfix/main.cf
@@ -199,13 +199,13 @@ RUN rm -rf /etc/sv/getty-5
 
 ADD overlay /
 
-RUN echo "use_timezone=${NAGIOS_TIMEZONE}" >> /opt/nagios/etc/nagios.cfg
+RUN echo "use_timezone=${NAGIOS_TIMEZONE}" >> ${NAGIOS_HOME}/etc/nagios.cfg
 
 # Copy example config in-case the user has started with empty var or etc
 
 RUN mkdir -p /orig/var && mkdir -p /orig/etc  && \
-    cp -Rp /opt/nagios/var/* /orig/var/       && \
-    cp -Rp /opt/nagios/etc/* /orig/etc/
+    cp -Rp ${NAGIOS_HOME}/var/* /orig/var/       && \
+    cp -Rp ${NAGIOS_HOME}/etc/* /orig/etc/
 
 RUN a2enmod session         && \
     a2enmod session_cookie  && \
@@ -239,6 +239,6 @@ RUN echo "ServerName ${NAGIOS_FQDN}" > /etc/apache2/conf-available/servername.co
 
 EXPOSE 80
 
-VOLUME "/opt/nagios/var" "/opt/nagios/etc" "/opt/nagios/libexec" "/var/log/apache2" "/usr/share/snmp/mibs" "/opt/Custom-Nagios-Plugins" "/opt/nagiosgraph/var" "/opt/nagiosgraph/etc"
+VOLUME "${NAGIOS_HOME}/var" "${NAGIOS_HOME}/etc" "${NAGIOS_HOME}/libexec" "/var/log/apache2" "/usr/share/snmp/mibs" "/opt/Custom-Nagios-Plugins" "/opt/nagiosgraph/var" "/opt/nagiosgraph/etc"
 
 CMD [ "/usr/local/bin/start_nagios" ]
