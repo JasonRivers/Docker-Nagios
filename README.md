@@ -35,6 +35,14 @@ docker run --name nagios4  \
 
 Note: The path for the custom plugins will be /opt/Custom-Nagios-Plugins, you will need to reference this directory in your configuration scripts.
 
+There are a number of environment variables that you can use to adjust the behaviour of the container:
+| Environamne Variable | Description |
+|--------|--------|
+| MAIL_RELAY_HOST | Set Postfix relayhost |
+| MAIL_INET_PROTOCOLS | set the inet_protocols in postfix |
+| NAGIOS_FQDN | set the server Fully Qualified Domain Name in postfix |
+| NAGIOS_TIMEZONE | set the timezone if the server |
+
 For best results your Nagios image should have access to both IPv4 & IPv6 networks 
 
 #### Credentials
