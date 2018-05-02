@@ -9,6 +9,9 @@ if [ -z "$(ls -A /opt/nagios/etc)" ]; then
     cp -Rp /orig/etc/* /opt/nagios/etc/
 fi
 
+echo "Ensure ownership for /opt/nagios/var if using a mounted volume"
+test -d /opt/nagios/var && chown nagios: /opt/nagios/var
+
 if [ -z "$(ls -A /opt/nagios/var)" ]; then
     echo "Started with empty VAR, copying example data in-place"
     cp -Rp /orig/var/* /opt/nagios/var/
