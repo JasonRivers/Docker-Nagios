@@ -2,11 +2,9 @@
 
 Docker image for Nagios
 
-4.4.0 is currently not working, see here: https://github.com/NagiosEnterprises/nagioscore/issues/538
-
 Build Status: [![Build Status](https://travis-ci.org/JasonRivers/Docker-Nagios.svg?branch=master)](https://travis-ci.org/JasonRivers/Docker-Nagios)
 
-Nagios Core 4.3.4 running on Ubuntu 16.04 LTS with NagiosGraph & NRPE
+Nagios Core 4.4.1 running on Ubuntu 16.04 LTS with NagiosGraph & NRPE
 
 ### Configurations
 Nagios Configuration lives in /opt/nagios/etc
