@@ -103,6 +103,9 @@ RUN cd /tmp                                           && \
 RUN cd /tmp                                                                          && \
     git clone https://github.com/NagiosEnterprises/nagioscore.git -b $NAGIOS_BRANCH  && \
     cd nagioscore                                                                    && \
+    ## Fix comment loop  FIXME
+    ## see: https://github.com/NagiosEnterprises/nagioscore/issues/549
+    sed -i 's/cleanup_downtime_data();/cleanup_downtime_data();free_comment_data();/' base/nagios.c     && \
     ./configure                                  \
         --prefix=${NAGIOS_HOME}                  \
         --exec-prefix=${NAGIOS_HOME}             \
