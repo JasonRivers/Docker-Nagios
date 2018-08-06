@@ -1,7 +1,9 @@
 #!/bin/bash
 
 
-sed -i "s/relayhost =.*/relayhost = ${MAIL_RELAY_HOST}/" /etc/postfix/main.cf
+if ! [ "${MAIL_RELAY_HOST}" = "" ]; then
+    sed -i "s/relayhost =.*/relayhost = ${MAIL_RELAY_HOST}/" /etc/postfix/main.cf
+fi
 if ! [ "${MAIL_INET_PROTOCOLS}" = "" ]; then 
     sed -i "s/inet_protocols =.*/inet_protocols = ${MAIL_INET_PROTOCOLS}/" /etc/postfix/main.cf
 fi
