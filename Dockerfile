@@ -96,10 +96,6 @@ RUN cd /tmp                                           && \
     make install                                      && \
     make clean
 
-## Nagios 4.3.1 has leftover debug code which spams syslog every 15 seconds
-## Its fixed in 4.3.2 and the patch can be removed then
-
-
 RUN cd /tmp                                                                          && \
     git clone https://github.com/NagiosEnterprises/nagioscore.git -b $NAGIOS_BRANCH  && \
     cd nagioscore                                                                    && \
