@@ -17,7 +17,7 @@ ENV NG_NAGIOS_CONFIG_FILE  ${NAGIOS_HOME}/etc/nagios.cfg
 ENV NG_CGI_DIR             ${NAGIOS_HOME}/sbin
 ENV NG_WWW_DIR             ${NAGIOS_HOME}/share/nagiosgraph
 ENV NG_CGI_URL             /cgi-bin
-ENV NAGIOS_BRANCH          nagios-4.4.1
+ENV NAGIOS_BRANCH          nagios-4.4.2
 ENV NAGIOS_PLUGINS_BRANCH  release-2.2.1
 ENV NRPE_BRANCH            nrpe-3.2.1
 
@@ -96,16 +96,9 @@ RUN cd /tmp                                           && \
     make install                                      && \
     make clean
 
-## Nagios 4.3.1 has leftover debug code which spams syslog every 15 seconds
-## Its fixed in 4.3.2 and the patch can be removed then
-
-
 RUN cd /tmp                                                                          && \
     git clone https://github.com/NagiosEnterprises/nagioscore.git -b $NAGIOS_BRANCH  && \
     cd nagioscore                                                                    && \
-    ## Fix comment loop  FIXME
-    ## see: https://github.com/NagiosEnterprises/nagioscore/issues/549
-    sed -i 's/cleanup_downtime_data();/cleanup_downtime_data();free_comment_data();/' base/nagios.c     && \
     ./configure                                  \
         --prefix=${NAGIOS_HOME}                  \
         --exec-prefix=${NAGIOS_HOME}             \
