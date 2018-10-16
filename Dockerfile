@@ -119,8 +119,10 @@ RUN cd /tmp                                                                     
     git clone https://github.com/nagios-plugins/nagios-plugins.git -b $NAGIOS_PLUGINS_BRANCH  && \
     cd nagios-plugins                                                                         && \
     ./tools/setup                                                                             && \
-    ./configure                  \
-        --prefix=${NAGIOS_HOME}  \
+    ./configure                                                 \
+        --prefix=${NAGIOS_HOME}                                 \
+        --with-ipv6                                             \
+        --with-ping6-command="/bin/ping6 -n -U -W %d -c %d %s"  \
                                                                                               && \
     make                                                                                      && \
     make install                                                                              && \
