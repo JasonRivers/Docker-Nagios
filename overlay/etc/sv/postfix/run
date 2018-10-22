@@ -1,13 +1,5 @@
 #!/bin/bash
 
-# Get a valid SSL certificate for postfix
-if [ ! -f /etc/postfix/cacert.pem ]; then
-    echo "cacert.pem not found; downloading thawte pem file..."
-    cd /etc/ssl/certs/
-    wget https://www.thawte.com/roots/thawte_Premium_Server_CA.pem
-    mv thawte_Premium_Server_CA.pem Thawte_Premium_Server_CA.pem
-    cat Thawte_Premium_Server_CA.pem | tee -a /etc/postfix/cacert.pem
-fi
 if [ ! -z "${MAIL_MYNETWORKS}" ]; then
     echo "setting mynetworks = ${MAIL_MYNETWORKS}"
     postconf -e mynetworks="${MAIL_MYNETWORKS}"
@@ -15,7 +7,7 @@ fi
 if ! [ "${MAIL_RELAY_HOST}" = "" ]; then
     postconf relayhost=${MAIL_RELAY_HOST}
 fi
-if ! [ "${MAIL_RELAY_HOST}" = "" ] && [ -z "${MAIL_RELAY_USERNAME}" ] && [ -z "${MAIL_RELAY_PASSWORD}" ]; then
+if ! [ "${MAIL_RELAY_HOST}" = "" ] && [ "${MAIL_RELAY_USERNAME}" ] && [ "${MAIL_RELAY_PASSWORD}" ]; then
     echo "${MAIL_RELAY_HOST}    ${MAIL_RELAY_USERNAME}:${MAIL_RELAY_PASSWORD}" > /etc/postfix/sasl_passwd
     postmap /etc/postfix/sasl_passwd
     postconf relayhost=${MAIL_RELAY_HOST}
