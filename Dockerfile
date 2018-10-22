@@ -33,6 +33,7 @@ RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set
         bc                                  \
         bsd-mailx                           \
         build-essential                     \
+	ca-certificates			    \
         dnsutils                            \
         fping                               \
         gettext                             \
@@ -61,10 +62,13 @@ RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set
         libpq-dev                           \
         libredis-perl                       \
         librrds-perl                        \
+	libsasl2-2			    \
+	libsasl2-modules		    \
         libssl-dev                          \
         libswitch-perl                      \
         libwww-perl                         \
         m4                                  \
+	mailutils			    \
         netcat                              \
         parallel                            \
         php-cli                             \
@@ -189,7 +193,7 @@ RUN sed -i 's,/bin/mail,/usr/bin/mail,' ${NAGIOS_HOME}/etc/objects/commands.cfg 
     sed -i 's,/usr/usr,/usr,'           ${NAGIOS_HOME}/etc/objects/commands.cfg
 
 RUN cp /etc/services /var/spool/postfix/etc/  && \
-    echo "smtp_address_preference = ipv4" >> /etc/postfix/main.cf
+    postconf smtp_address_preference=ipv4
 
 RUN rm -rf /etc/rsyslog.d /etc/rsyslog.conf
 
@@ -197,7 +201,9 @@ RUN rm -rf /etc/sv/getty-5
 
 ADD overlay /
 
-RUN echo "use_timezone=${NAGIOS_TIMEZONE}" >> ${NAGIOS_HOME}/etc/nagios.cfg
+RUN echo "${NAGIOS_TIMEZONE}" > /etc/timezone && \
+    dpkg-reconfigure -f noninteractive tzdata && \
+    echo "use_timezone=${NAGIOS_TIMEZONE}" >> ${NAGIOS_HOME}/etc/nagios.cfg
 
 # Copy example config in-case the user has started with empty var or etc
 
