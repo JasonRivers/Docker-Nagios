@@ -40,8 +40,8 @@ Run with a postfix setup for an externam authenticated mail relay server (such a
 ```sh
 docker run --name nagios4 \
   -e SYSTEM_TIMEZONE=Europe/Paris \
-  -e POSTFIX_EMAIL=<my.username>@gmail.com \
-  -e POSTFIX_EMAILPASS=<my.password> \
+  -e MAIL_RELAY_USERNAME=<my.username>@gmail.com \
+  -e MAIL_RELAY_PASSWORD=<my.password> \
   -e MAIL_RELAY_HOST=[smtp.gmail.com]:587 \
   -p 0.0.0.0:8080:80 jasonrivers/nagios:latest
 ```
