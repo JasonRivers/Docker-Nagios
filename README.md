@@ -2,7 +2,7 @@
 
 Docker image for Nagios
 
-Build Status: [![Build Status](https://travis-ci.org/JasonRivers/Docker-Nagios.svg?branch=master)](https://travis-ci.org/JasonRivers/Docker-Nagios)
+Build Status: [![Build Status](https://travis-ci.org/cnaslain/Docker-Nagios.svg?branch=master)](https://travis-ci.org/cnaslain/Docker-Nagios)
 
 Nagios Core 4.4.2 running on Ubuntu 16.04 LTS with NagiosGraph & NRPE
 
