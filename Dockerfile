@@ -44,6 +44,7 @@ RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set
         libcache-memcached-perl             \
         libcgi-pm-perl                      \
         libdbd-mysql-perl                   \
+        libdbd-pg-perl                      \
         libdbi-dev                          \
         libdbi-perl                         \
         libfreeradius-client-dev            \
@@ -157,16 +158,24 @@ RUN cd /tmp                                                          && \
     cp share/nagiosgraph.ssi ${NAGIOS_HOME}/share/ssi/common-header.ssi
 
 RUN cd /opt                                                                         && \
+    pip install jsonpath-rw                                                         && \
+    pip install paho-mqtt                                                           && \
     pip install pymssql                                                             && \
     git clone https://github.com/willixix/naglio-plugins.git     WL-Nagios-Plugins  && \
     git clone https://github.com/JasonRivers/nagios-plugins.git  JR-Nagios-Plugins  && \
     git clone https://github.com/justintime/nagios-plugins.git   JE-Nagios-Plugins  && \
     git clone https://github.com/nagiosenterprises/check_mssql_collection.git   nagios-mssql  && \
+    git clone https://github.com/jpmens/check-mqtt.git           jpmens-mqtt        && \
+    git clone https://github.com/danfruehauf/nagios-plugins.git  danfruehauf-sql    && \
     chmod +x /opt/WL-Nagios-Plugins/check*                                          && \
     chmod +x /opt/JE-Nagios-Plugins/check_mem/check_mem.pl                          && \
-    cp /opt/JE-Nagios-Plugins/check_mem/check_mem.pl ${NAGIOS_HOME}/libexec/           && \
-    cp /opt/nagios-mssql/check_mssql_database.py ${NAGIOS_HOME}/libexec/                         && \
-    cp /opt/nagios-mssql/check_mssql_server.py ${NAGIOS_HOME}/libexec/
+    chmod +x /opt/jpmens-mqtt/check-mqtt.py                                         && \
+    chmod +x /opt/danfruehauf-sql/check_sql/check_sql                               && \
+    cp /opt/JE-Nagios-Plugins/check_mem/check_mem.pl ${NAGIOS_HOME}/libexec/        && \
+    cp /opt/nagios-mssql/check_mssql_database.py ${NAGIOS_HOME}/libexec/            && \
+    cp /opt/nagios-mssql/check_mssql_server.py ${NAGIOS_HOME}/libexec/              && \
+    cp /opt/jpmens-mqtt/check-mqtt.py ${NAGIOS_HOME}/libexec/                       && \
+    cp /opt/danfruehauf-sql/check_sql/check_sql ${NAGIOS_HOME}/libexec/
 
 
 RUN sed -i.bak 's/.*\=www\-data//g' /etc/apache2/envvars
