@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM debian:stretch-slim
 MAINTAINER Jason Rivers <jason@jasonrivers.co.uk>
 
 ENV NAGIOS_HOME            /opt/nagios
@@ -21,11 +21,13 @@ ENV NAGIOS_BRANCH          nagios-4.4.2
 ENV NAGIOS_PLUGINS_BRANCH  release-2.2.1
 ENV NRPE_BRANCH            nrpe-3.2.1
 
+# For snmp-mibs-downloader
+RUN echo "deb http://deb.debian.org/debian stretch non-free" > /etc/apt/sources.list.d/non-free.list
 
 RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set-selections  && \
     echo postfix postfix/mynetworks string "127.0.0.0/8" | debconf-set-selections            && \
     echo postfix postfix/mailname string ${NAGIOS_FQDN} | debconf-set-selections             && \
-    apt-get update && apt-get install -y    \
+    apt-get update && apt-get install --no-install-recommends -y    \
         apache2                             \
         apache2-utils                       \
         autoconf                            \
@@ -46,19 +48,19 @@ RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set
         libdbd-mysql-perl                   \
         libdbi-dev                          \
         libdbi-perl                         \
-        libfreeradius-client-dev            \
         libgd2-xpm-dev                      \
         libgd-gd2-perl                      \
         libjson-perl                        \
         libldap2-dev                        \
-        libmysqlclient-dev                  \
+        libmariadbclient-dev-compat         \
+        libmonitoring-plugin-perl           \
         libnagios-object-perl               \
-        libnagios-plugin-perl               \
         libnet-snmp-perl                    \
         libnet-snmp-perl                    \
         libnet-tftp-perl                    \
         libnet-xmpp-perl                    \
         libpq-dev                           \
+        libradcli-dev                       \
         libredis-perl                       \
         librrds-perl                        \
         libssl-dev                          \
@@ -155,6 +157,8 @@ RUN cd /tmp                                                          && \
         --nagios-cgi-url /cgi-bin                               \
                                                                      && \
     cp share/nagiosgraph.ssi ${NAGIOS_HOME}/share/ssi/common-header.ssi
+
+RUN rm -rf /tmp/*
 
 RUN cd /opt                                                                         && \
     pip install pymssql                                                             && \
