@@ -94,7 +94,8 @@ RUN cd /tmp                                           && \
     ./configure                                       && \
     make                                              && \
     make install                                      && \
-    make clean
+    make clean                                        && \
+    cd /tmp && rm -Rf qstat
 
 RUN cd /tmp                                                                          && \
     git clone https://github.com/NagiosEnterprises/nagioscore.git -b $NAGIOS_BRANCH  && \
@@ -113,7 +114,8 @@ RUN cd /tmp                                                                     
     make install-config                                                              && \
     make install-commandmode                                                         && \
     make install-webconf                                                             && \
-    make clean
+    make clean                                                                       && \
+    cd /tmp && rm -Rf nagioscore
 
 RUN cd /tmp                                                                                   && \
     git clone https://github.com/nagios-plugins/nagios-plugins.git -b $NAGIOS_PLUGINS_BRANCH  && \
@@ -128,7 +130,8 @@ RUN cd /tmp                                                                     
     make install                                                                              && \
     make clean                                                                                && \
     mkdir -p /usr/lib/nagios/plugins                                                          && \
-    ln -sf ${NAGIOS_HOME}/libexec/utils.pm /usr/lib/nagios/plugins
+    ln -sf ${NAGIOS_HOME}/libexec/utils.pm /usr/lib/nagios/plugins                            && \
+    cd /tmp && rm -Rf nagios-plugins
 
 RUN wget -O ${NAGIOS_HOME}/libexec/check_ncpa.py https://raw.githubusercontent.com/NagiosEnterprises/ncpa/v2.0.5/client/check_ncpa.py  && \
     chmod +x ${NAGIOS_HOME}/libexec/check_ncpa.py
@@ -142,7 +145,8 @@ RUN cd /tmp                                                                  && 
                                                                              && \
     make check_nrpe                                                          && \
     cp src/check_nrpe ${NAGIOS_HOME}/libexec/                                && \
-    make clean
+    make clean                                                               && \
+    cd /tmp && rm -Rf nrpe
 
 RUN cd /tmp                                                          && \
     git clone https://git.code.sf.net/p/nagiosgraph/git nagiosgraph  && \
@@ -154,7 +158,8 @@ RUN cd /tmp                                                          && \
         --nagios-perfdata-file ${NAGIOS_HOME}/var/perfdata.log  \
         --nagios-cgi-url /cgi-bin                               \
                                                                      && \
-    cp share/nagiosgraph.ssi ${NAGIOS_HOME}/share/ssi/common-header.ssi
+    cp share/nagiosgraph.ssi ${NAGIOS_HOME}/share/ssi/common-header.ssi && \
+    cd /tmp && rm -Rf nagiosgraph
 
 RUN cd /opt                                                                         && \
     pip install pymssql                                                             && \
