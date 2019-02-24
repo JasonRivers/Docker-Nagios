@@ -1,0 +1,5 @@
+#!/bin/bash
+
+if [ -f "/etc/nsca.cfg" ]; then 
+    exec /usr/sbin/nsca -c /etc/nsca.cfg -f
+fi

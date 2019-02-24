@@ -66,6 +66,7 @@ RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set
         libwww-perl                         \
         m4                                  \
         netcat                              \
+        nsca                                \
         parallel                            \
         php-cli                             \
         php-gd                              \
@@ -219,14 +220,17 @@ RUN a2enmod session         && \
 RUN chmod +x /usr/local/bin/start_nagios        && \
     chmod +x /etc/sv/apache/run                 && \
     chmod +x /etc/sv/nagios/run                 && \
-    chmod +x /etc/sv/postfix/run                 && \
-    chmod +x /etc/sv/rsyslog/run                 && \
+    chmod +x /etc/sv/postfix/run                && \
+    chmod +x /etc/sv/rsyslog/run                && \
+    chmod +x /etc/sv/nsca/run                   && \
     chmod +x /opt/nagiosgraph/etc/fix-nagiosgraph-multiple-selection.sh
 
 RUN cd /opt/nagiosgraph/etc && \
     sh fix-nagiosgraph-multiple-selection.sh
 
 RUN rm /opt/nagiosgraph/etc/fix-nagiosgraph-multiple-selection.sh
+
+RUN mv /etc/nsca.cfg /etc/nsca.cfg.default
 
 # enable all runit services
 RUN ln -s /etc/sv/* /etc/service
@@ -242,6 +246,6 @@ RUN echo "ServerName ${NAGIOS_FQDN}" > /etc/apache2/conf-available/servername.co
 
 EXPOSE 80
 
-VOLUME "${NAGIOS_HOME}/var" "${NAGIOS_HOME}/etc" "/var/log/apache2" "/opt/Custom-Nagios-Plugins" "/opt/nagiosgraph/var" "/opt/nagiosgraph/etc"
+VOLUME "${NAGIOS_HOME}/var" "${NAGIOS_HOME}/etc" "/var/log/apache2" "/opt/Custom-Nagios-Plugins" "/opt/nagiosgraph/var" "/opt/nagiosgraph/etc" "/etc/nsca.cfg"
 
 CMD [ "/usr/local/bin/start_nagios" ]

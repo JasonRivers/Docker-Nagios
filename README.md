@@ -49,6 +49,12 @@ There are a number of environment variables that you can use to adjust the behav
 
 For best results your Nagios image should have access to both IPv4 & IPv6 networks 
 
+For NSCA support mount a volume with the configuration file and expose the nsca port (default 5667) as follows:
+
+```sh
+docker run --name nagios4 -p 0.0.0.0:8080:80 -p 0.0.0.0:5667:5667 -v /path-to-custom-nsca.cfg:/etc/nsca.cfg jasonrivers/nagios:latest
+```
+
 #### Credentials
 
 The default credentials for the web interface is `nagiosadmin` / `nagios`
