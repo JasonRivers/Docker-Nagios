@@ -230,7 +230,7 @@ RUN cd /opt/nagiosgraph/etc && \
 
 RUN rm /opt/nagiosgraph/etc/fix-nagiosgraph-multiple-selection.sh
 
-RUN mv /etc/nsca.cfg /etc/nsca.cfg.default
+RUN mkdir /opt/nsca && mv /etc/nsca.cfg /opt/nsca/nsca.cfg.default
 
 # enable all runit services
 RUN ln -s /etc/sv/* /etc/service
@@ -246,6 +246,6 @@ RUN echo "ServerName ${NAGIOS_FQDN}" > /etc/apache2/conf-available/servername.co
 
 EXPOSE 80
 
-VOLUME "${NAGIOS_HOME}/var" "${NAGIOS_HOME}/etc" "/var/log/apache2" "/opt/Custom-Nagios-Plugins" "/opt/nagiosgraph/var" "/opt/nagiosgraph/etc" "/etc/nsca.cfg"
+VOLUME "${NAGIOS_HOME}/var" "${NAGIOS_HOME}/etc" "/var/log/apache2" "/opt/Custom-Nagios-Plugins" "/opt/nagiosgraph/var" "/opt/nagiosgraph/etc" "/opt/nsca/nsca.cfg"
 
 CMD [ "/usr/local/bin/start_nagios" ]
