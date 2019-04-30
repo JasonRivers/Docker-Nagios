@@ -4,6 +4,7 @@ MAINTAINER Jason Rivers <jason@jasonrivers.co.uk>
 ENV NAGIOS_HOME            /opt/nagios
 ENV NAGIOS_USER            nagios
 ENV NAGIOS_GROUP           nagios
+ARG DOCKER_GID=996
 ENV NAGIOS_CMDUSER         nagios
 ENV NAGIOS_CMDGROUP        nagios
 ENV NAGIOS_FQDN            nagios.example.com
@@ -177,6 +178,7 @@ RUN cd /opt                                                                     
     cp /opt/jpmens-mqtt/check-mqtt.py ${NAGIOS_HOME}/libexec/                       && \
     cp /opt/danfruehauf-sql/check_sql/check_sql ${NAGIOS_HOME}/libexec/
 
+RUN pip install docker-compose
 
 RUN sed -i.bak 's/.*\=www\-data//g' /etc/apache2/envvars
 RUN export DOC_ROOT="DocumentRoot $(echo $NAGIOS_HOME/share)"                         && \
@@ -249,3 +251,6 @@ EXPOSE 80
 VOLUME "${NAGIOS_HOME}/var" "${NAGIOS_HOME}/etc" "/var/log/apache2" "/opt/Custom-Nagios-Plugins" "/opt/nagiosgraph/var" "/opt/nagiosgraph/etc"
 
 CMD [ "/usr/local/bin/start_nagios" ]
+
+RUN groupadd -g ${DOCKER_GID} docker
+RUN usermod -aG docker ${NAGIOS_USER}
