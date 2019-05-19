@@ -35,6 +35,7 @@ RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set
         build-essential                     \
         dnsutils                            \
         fping                               \
+        freetds-dev                         \
         gettext                             \
         git                                 \
         gperf                               \
@@ -141,7 +142,7 @@ RUN cd /tmp                                                                  && 
     cd nrpe                                                                  && \
     ./configure                                   \
         --with-ssl=/usr/bin/openssl               \
-        --with-ssl-lib=/usr/lib/x86_64-linux-gnu  \
+        --with-ssl-lib=/usr/lib/`uname -m`-linux-gnu  \
                                                                              && \
     make check_nrpe                                                          && \
     cp src/check_nrpe ${NAGIOS_HOME}/libexec/                                && \
