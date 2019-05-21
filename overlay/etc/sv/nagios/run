@@ -6,13 +6,18 @@ find /opt/nagiosgraph \! -user ${NAGIOS_USER} -exec chown ${NAGIOS_USER}:${NAGIO
 if ! [ -f /opt/nagiosgraph/etc/ngshared.pm ]; then
 echo "Configuring Nagiosgraph"
 
-cd /tmp/nagiosgraph                                           && \
-./install.pl --install                                      \
-    --prefix /opt/nagiosgraph                               \
-    --nagios-user ${NAGIOS_USER}                            \
-    --www-user ${NAGIOS_USER}                               \
-    --nagios-perfdata-file ${NAGIOS_HOME}/var/perfdata.log  \
-    --nagios-cgi-url /cgi-bin >/dev/null
+cd /tmp                                                             && \
+git clone https://git.code.sf.net/p/nagiosgraph/git nagiosgraph     && \
+cd nagiosgraph                                                      && \
+./install.pl --install                                                 \
+    --prefix /opt/nagiosgraph                                          \
+    --nagios-user ${NAGIOS_USER}                                       \
+    --www-user ${NAGIOS_USER}                                          \
+    --nagios-perfdata-file ${NAGIOS_HOME}/var/perfdata.log             \
+    --nagios-cgi-url /cgi-bin >/dev/null                            && \
+cp share/nagiosgraph.ssi ${NAGIOS_HOME}/share/ssi/common-header.ssi && \
+cd /tmp && rm -Rf nagiosgraph
+
 echo "done"
 fi
 
