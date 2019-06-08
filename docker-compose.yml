@@ -16,6 +16,7 @@ services:
     - customplugins:/opt/Custom-Nagios-Plugins
     - nagiosgraphvar:/opt/nagiosgraph/var
     - nagiosgraphetc:/opt/nagiosgraph/etc
+    - apacheconf:/opt/CustomApacheFiles
 
 volumes:
     nagiosetc:
@@ -23,3 +24,4 @@ volumes:
     customplugins:
     nagiosgraphvar:
     nagiosgraphetc:
+    apacheconf:

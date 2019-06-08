@@ -5,4 +5,6 @@
 
 export TZ="${NAGIOS_TIMEZONE}"
 
+test -f /opt/CustomApacheFiles/apache-extra.conf || touch /opt/CustomApacheFiles/apache-extra.conf
+
 exec /usr/sbin/apache2 -D NO_DETACH

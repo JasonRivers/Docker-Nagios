@@ -216,6 +216,10 @@ RUN a2enmod session         && \
     a2enmod auth_form       && \
     a2enmod request
 
+# Add external apache confs
+RUN mkdir -p /opt/CustomApacheFiles && \
+    ln -sf /opt/CustomApacheFiles/apache-extra.conf /etc/apache2/conf-enabled/apache-extra.conf
+
 RUN chmod +x /usr/local/bin/start_nagios        && \
     chmod +x /etc/sv/apache/run                 && \
     chmod +x /etc/sv/nagios/run                 && \
@@ -242,6 +246,6 @@ RUN echo "ServerName ${NAGIOS_FQDN}" > /etc/apache2/conf-available/servername.co
 
 EXPOSE 80
 
-VOLUME "${NAGIOS_HOME}/var" "${NAGIOS_HOME}/etc" "/var/log/apache2" "/opt/Custom-Nagios-Plugins" "/opt/nagiosgraph/var" "/opt/nagiosgraph/etc"
+VOLUME "${NAGIOS_HOME}/var" "${NAGIOS_HOME}/etc" "/var/log/apache2" "/opt/Custom-Nagios-Plugins" "/opt/nagiosgraph/var" "/opt/nagiosgraph/etc" "/opt/CustomApacheFiles/"
 
 CMD [ "/usr/local/bin/start_nagios" ]
