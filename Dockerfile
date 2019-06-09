@@ -69,6 +69,7 @@ RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set
         parallel                            \
         php-cli                             \
         php-gd                              \
+        php-xml                             \
         postfix                             \
         python-pip                          \
         rsyslog                             \
