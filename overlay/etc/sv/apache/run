@@ -5,6 +5,7 @@
 
 export TZ="${NAGIOS_TIMEZONE}"
 
-test -f /opt/CustomApacheFiles/apache-extra.conf || touch /opt/CustomApacheFiles/apache-extra.conf
+test -f /usr/local/share/confs/apache-nrdp.conf || \
+  cp /usr/local/share/default_confs/apache-nrdp.conf /usr/local/share/confs/apache-nrdp.conf
 
 exec /usr/sbin/apache2 -D NO_DETACH

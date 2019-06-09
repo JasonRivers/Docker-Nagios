@@ -16,4 +16,7 @@ cd /tmp/nagiosgraph                                           && \
 echo "done"
 fi
 
+test -f /usr/local/share/confs/nrdp-config.inc.php || \
+  cp /usr/local/share/default_confs/nrdp-config.inc.php /usr/local/share/confs/nrdp-config.inc.php
+
 exec "${NAGIOS_HOME}/bin/nagios" "${NAGIOS_HOME}/etc/nagios.cfg"
