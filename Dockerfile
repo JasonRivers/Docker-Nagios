@@ -1,5 +1,5 @@
 FROM ubuntu:16.04
-MAINTAINER Jason Rivers <jason@jasonrivers.co.uk>
+MAINTAINER Cédrick GAILLARD <cedrick.gaillard@gmail.com>
 
 ENV NAGIOS_HOME            /opt/nagios
 ENV NAGIOS_USER            nagios
@@ -20,6 +20,8 @@ ENV NG_CGI_URL             /cgi-bin
 ENV NAGIOS_BRANCH          nagios-4.4.3
 ENV NAGIOS_PLUGINS_BRANCH  release-2.2.1
 ENV NRPE_BRANCH            nrpe-3.2.1
+ENV NRDP_VERSION           1.5.2
+ENV CONFIG_DIR             /usr/local/share/confs
 
 
 RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set-selections  && \
@@ -69,6 +71,7 @@ RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set
         parallel                            \
         php-cli                             \
         php-gd                              \
+        php-xml                             \
         postfix                             \
         python-pip                          \
         rsyslog                             \
@@ -133,8 +136,21 @@ RUN cd /tmp                                                                     
     ln -sf ${NAGIOS_HOME}/libexec/utils.pm /usr/lib/nagios/plugins                            && \
     cd /tmp && rm -Rf nagios-plugins
 
-RUN wget -O ${NAGIOS_HOME}/libexec/check_ncpa.py https://raw.githubusercontent.com/NagiosEnterprises/ncpa/v2.0.5/client/check_ncpa.py  && \
-    chmod +x ${NAGIOS_HOME}/libexec/check_ncpa.py
+RUN mkdir -p ${CONFIG_DIR}
+
+RUN wget -O /tmp/nrdp.tar.gz https://github.com/NagiosEnterprises/nrdp/releases/download/${NRDP_VERSION}/${NRDP_VERSION}.tar.gz && \
+    (cd /tmp ; tar xzf /tmp/nrdp.tar.gz) && \
+    mkdir -p /opt/NRDP-Plugin && \
+    cp -r /tmp/nrdp-${NRDP_VERSION}/clients /tmp/nrdp-${NRDP_VERSION}/server \
+      /tmp/nrdp-${NRDP_VERSION}/LICENSE* /tmp/nrdp-${NRDP_VERSION}/CHANGES* \
+      /opt/NRDP-Plugin && \
+    rm -f /opt/NRDP-Plugin/server/config.inc.php && \
+    ln -sf ${CONFIG_DIR}/nrdp-config.inc.php /opt/NRDP-Plugin/server/config.inc.php && \
+    chown -R ${NAGIOS_USER}:${NAGIOS_GROUP} /opt/NRDP-Plugin && \
+    rm -rf /tmp/nrdp*
+
+RUN ln -sf ${CONFIG_DIR}/apache-nrdp.conf /etc/apache2/sites-enabled/nrdp.conf
+    
 
 RUN cd /tmp                                                                  && \
     git clone https://github.com/NagiosEnterprises/nrpe.git -b $NRPE_BRANCH  && \
@@ -242,6 +258,6 @@ RUN echo "ServerName ${NAGIOS_FQDN}" > /etc/apache2/conf-available/servername.co
 
 EXPOSE 80
 
-VOLUME "${NAGIOS_HOME}/var" "${NAGIOS_HOME}/etc" "/var/log/apache2" "/opt/Custom-Nagios-Plugins" "/opt/nagiosgraph/var" "/opt/nagiosgraph/etc"
+VOLUME "${NAGIOS_HOME}/var" "${NAGIOS_HOME}/etc" "/var/log/apache2" "/opt/Custom-Nagios-Plugins" "/opt/nagiosgraph/var" "/opt/nagiosgraph/etc" "/opt/CustomApacheFiles/"
 
 CMD [ "/usr/local/bin/start_nagios" ]

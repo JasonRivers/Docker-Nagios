@@ -9,13 +9,14 @@
 version: '3'
 services:
   nagios:
-    image: jasonrivers/nagios:latest
+    image: mobidyc/nagios-server:latest
     volumes:
     - nagiosetc:/opt/nagios/etc
     - nagiosvar:/opt/nagios/var
     - customplugins:/opt/Custom-Nagios-Plugins
     - nagiosgraphvar:/opt/nagiosgraph/var
     - nagiosgraphetc:/opt/nagiosgraph/etc
+    - configdir:/usr/local/share/confs
 
 volumes:
     nagiosetc:
@@ -23,3 +24,4 @@ volumes:
     customplugins:
     nagiosgraphvar:
     nagiosgraphetc:
+    configdir:
