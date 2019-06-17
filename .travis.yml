@@ -1,13 +1,22 @@
-sudo:
-  - required
-language:
-  - bash
-services:
-  - docker
-
-install:
-  - git clone https://github.com/JasonRivers/Docker-Nagios.git ~/Docker-Nagios
+language: minimal
 
 script:
-  - ./build.sh
+  - docker-compose build
 
+before_deploy:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+deploy:
+  - provider: script
+    script: docker push janniswarnat/nagios:latest
+    on:
+      branch: master
+  - provider: script
+    script: docker tag janniswarnat/nagios janniswarnat/nagios:snapshot &&
+      docker push janniswarnat/nagios:snapshot
+    on:
+      branch: dev
+  - provider: script
+    script: docker tag janniswarnat/nagios janniswarnat/nagios:${TRAVIS_TAG} &&
+      docker push janniswarnat/nagios:${TRAVIS_TAG}
+    on:
+      tags: true
