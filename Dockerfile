@@ -73,6 +73,7 @@ RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set
         php-gd                              \
         postfix                             \
         python-pip                          \
+        python3-pip                         \
         rsyslog                             \
         runit                               \
         smbclient                           \
@@ -159,8 +160,8 @@ RUN cd /tmp                                                          && \
     cp share/nagiosgraph.ssi ${NAGIOS_HOME}/share/ssi/common-header.ssi
 
 RUN cd /opt                                                                         && \
-    pip install jsonpath-rw                                                         && \
-    pip install paho-mqtt                                                           && \
+    pip3 install jsonpath-rw                                                         && \
+    pip3 install paho-mqtt                                                           && \
     pip install pymssql                                                             && \
     git clone https://github.com/willixix/naglio-plugins.git     WL-Nagios-Plugins  && \
     git clone https://github.com/JasonRivers/nagios-plugins.git  JR-Nagios-Plugins  && \
