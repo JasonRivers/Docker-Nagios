@@ -1,5 +1,5 @@
-FROM ubuntu:16.04
-MAINTAINER Jason Rivers <jason@jasonrivers.co.uk>
+FROM ubuntu:18.04
+LABEL maintainer="Jason Rivers <jason@jasonrivers.co.uk>"
 
 ENV NAGIOS_HOME            /opt/nagios
 ENV NAGIOS_USER            nagios
@@ -46,14 +46,14 @@ RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set
         libdbd-mysql-perl                   \
         libdbi-dev                          \
         libdbi-perl                         \
-        libfreeradius-client-dev            \
-        libgd2-xpm-dev                      \
+        libradsec-dev                       \
+        libgd-dev                           \
         libgd-gd2-perl                      \
         libjson-perl                        \
         libldap2-dev                        \
         libmysqlclient-dev                  \
         libnagios-object-perl               \
-        libnagios-plugin-perl               \
+        libmonitoring-plugin-perl           \
         libnet-snmp-perl                    \
         libnet-snmp-perl                    \
         libnet-tftp-perl                    \
@@ -162,7 +162,7 @@ RUN cd /tmp                                                          && \
     cd /tmp && rm -Rf nagiosgraph
 
 RUN cd /opt                                                                         && \
-    pip install pymssql                                                             && \
+    pip install "pymssql<3.0"                                                             && \
     git clone https://github.com/willixix/naglio-plugins.git     WL-Nagios-Plugins  && \
     git clone https://github.com/JasonRivers/nagios-plugins.git  JR-Nagios-Plugins  && \
     git clone https://github.com/justintime/nagios-plugins.git   JE-Nagios-Plugins  && \
