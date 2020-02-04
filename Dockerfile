@@ -71,6 +71,7 @@ RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set
         php-gd                              \
         postfix                             \
         python-pip                          \
+        python3-nagiosplugin                \
         rsyslog                             \
         runit                               \
         smbclient                           \
