@@ -1,0 +1,3 @@
+#!/bin/bash
+
+exec /usr/sbin/xinetd -f /etc/xinetd.conf -dontfork

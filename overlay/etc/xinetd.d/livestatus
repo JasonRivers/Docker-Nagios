@@ -1,0 +1,14 @@
+service livestatus
+{
+    type        = UNLISTED
+    port        = 6557
+    socket_type = stream
+    protocol    = tcp
+    wait        = no
+    cps         = 100 3
+    flags       = NODELAY
+    user        = nagios
+    server      = /usr/local/bin/unixcat
+    server_args = /usr/local/nagios/var/rw/live
+    disable     = no
+}
