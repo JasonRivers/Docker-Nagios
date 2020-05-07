@@ -20,6 +20,7 @@ ENV NG_CGI_URL             /cgi-bin
 ENV NAGIOS_BRANCH          nagios-4.4.5
 ENV NAGIOS_PLUGINS_BRANCH  release-2.2.1
 ENV NRPE_BRANCH            nrpe-3.2.1
+ENV MK_LIVESTATUS_VERSION  1.2.8p18
 
 
 RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set-selections  && \
@@ -79,6 +80,7 @@ RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set
         snmp-mibs-downloader                \
         unzip                               \
         python                              \
+        xinetd                              \
                                                 && \
     apt-get clean && rm -Rf /var/lib/apt/lists/*
 
@@ -173,6 +175,18 @@ RUN cd /opt                                                                     
     cp /opt/nagios-mssql/check_mssql_database.py ${NAGIOS_HOME}/libexec/                         && \
     cp /opt/nagios-mssql/check_mssql_server.py ${NAGIOS_HOME}/libexec/
 
+RUN cd /tmp                                                                                && \
+    wget https://mathias-kettner.de/download/mk-livestatus-${MK_LIVESTATUS_VERSION}.tar.gz && \
+    tar zxf mk-livestatus-${MK_LIVESTATUS_VERSION}.tar.gz                                  && \
+    cd mk-livestatus-${MK_LIVESTATUS_VERSION}                                              && \
+    ./configure --with-nagios4                                                             && \
+    make                                                                                   && \
+    make install                                                                           && \
+    cd /tmp && rm -Rf mk-livestatus-${MK_LIVESTATUS_VERSION}                               && \
+    cd /tmp && rm -f mk-livestatus-${MK_LIVESTATUS_VERSION}.tar.gz
+
+RUN mkdir -p /usr/local/nagios/var/rw                             && \
+    chown ${NAGIOS_USER}:${NAGIOS_GROUP} /usr/local/nagios/var/rw
 
 RUN sed -i.bak 's/.*\=www\-data//g' /etc/apache2/envvars
 RUN export DOC_ROOT="DocumentRoot $(echo $NAGIOS_HOME/share)"                         && \
@@ -206,9 +220,12 @@ RUN echo "use_timezone=${NAGIOS_TIMEZONE}" >> ${NAGIOS_HOME}/etc/nagios.cfg
 
 # Copy example config in-case the user has started with empty var or etc
 
-RUN mkdir -p /orig/var && mkdir -p /orig/etc  && \
-    cp -Rp ${NAGIOS_HOME}/var/* /orig/var/       && \
-    cp -Rp ${NAGIOS_HOME}/etc/* /orig/etc/
+RUN mkdir -p /orig/var                     && \
+    mkdir -p /orig/etc                     && \
+    mkdir -p /orig/xinetd.d                && \
+    cp -Rp ${NAGIOS_HOME}/var/* /orig/var/ && \
+    cp -Rp ${NAGIOS_HOME}/etc/* /orig/etc/ && \
+    cp -Rp /etc/xinetd.d/* /orig/xinetd.d/
 
 RUN a2enmod session         && \
     a2enmod session_cookie  && \
@@ -241,6 +258,7 @@ RUN echo "ServerName ${NAGIOS_FQDN}" > /etc/apache2/conf-available/servername.co
     ln -s /etc/apache2/conf-available/timezone.conf /etc/apache2/conf-enabled/timezone.conf
 
 EXPOSE 80
+EXPOSE 6557
 
 VOLUME "${NAGIOS_HOME}/var" "${NAGIOS_HOME}/etc" "/var/log/apache2" "/opt/Custom-Nagios-Plugins" "/opt/nagiosgraph/var" "/opt/nagiosgraph/etc"
 
