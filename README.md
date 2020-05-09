@@ -4,7 +4,7 @@ Docker image for Nagios
 
 Build Status: [![Build Status](https://travis-ci.org/JasonRivers/Docker-Nagios.svg?branch=master)](https://travis-ci.org/JasonRivers/Docker-Nagios)
 
-Nagios Core 4.4.5 running on Ubuntu 16.04 LTS with NagiosGraph & NRPE
+Nagios Core 4.4.6 running on Ubuntu 16.04 LTS with NagiosGraph & NRPE
 
 ### Configurations
 Nagios Configuration lives in /opt/nagios/etc
@@ -47,7 +47,7 @@ There are a number of environment variables that you can use to adjust the behav
 | NAGIOS_FQDN | set the server Fully Qualified Domain Name in postfix |
 | NAGIOS_TIMEZONE | set the timezone of the server |
 
-For best results your Nagios image should have access to both IPv4 & IPv6 networks 
+For best results your Nagios image should have access to both IPv4 & IPv6 networks
 
 #### Credentials
 
@@ -60,5 +60,3 @@ The default credentials for the web interface is `nagiosadmin` / `nagios`
 * JR-Nagios-Plugins -  custom plugins I've created [<https://github.com/JasonRivers/nagios-plugins>]
 * WL-Nagios-Plugins -  custom plugins from William Leibzon [<https://github.com/willixix/WL-NagiosPlugins>]
 * JE-Nagios-Plugins -  custom plugins from Justin Ellison [<https://github.com/justintime/nagios-plugins>]
-
-
