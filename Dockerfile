@@ -20,6 +20,7 @@ ENV NG_CGI_URL             /cgi-bin
 ENV NAGIOS_BRANCH          nagios-4.4.6
 ENV NAGIOS_PLUGINS_BRANCH  release-2.2.1
 ENV NRPE_BRANCH            nrpe-3.2.1
+ENV NSCA_TAG               nsca-2.10.0
 
 
 RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set-selections  && \
@@ -79,6 +80,7 @@ RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set
         snmp-mibs-downloader                \
         unzip                               \
         python                              \
+        xinetd                              \
                                                 && \
     apt-get clean && rm -Rf /var/lib/apt/lists/*
 
@@ -161,6 +163,21 @@ RUN cd /tmp                                                          && \
     cp share/nagiosgraph.ssi ${NAGIOS_HOME}/share/ssi/common-header.ssi && \
     cd /tmp && rm -Rf nagiosgraph
 
+RUN cd /tmp                                                 && \
+    git clone https://github.com/NagiosEnterprises/nsca.git && \
+    cd nsca                                                 && \
+    git checkout $NSCA_TAG                                  && \
+    ./configure                                                \
+        --prefix=${NAGIOS_HOME}                                \
+        --with-nsca-user=${NAGIOS_USER}                        \
+        --with-nsca-grp=${NAGIOS_GROUP}                     && \
+    make all                                                && \
+    cp src/nsca ${NAGIOS_HOME}/bin/                         && \
+    cp src/send_nsca ${NAGIOS_HOME}/bin/                    && \
+    cp sample-config/nsca.cfg ${NAGIOS_HOME}/etc/           && \
+    cp sample-config/send_nsca.cfg ${NAGIOS_HOME}/etc/      && \
+    cd /tmp && rm -Rf nsca
+
 RUN cd /opt                                                                         && \
     pip install pymssql                                                             && \
     git clone https://github.com/willixix/naglio-plugins.git     WL-Nagios-Plugins  && \
@@ -206,9 +223,12 @@ RUN echo "use_timezone=${NAGIOS_TIMEZONE}" >> ${NAGIOS_HOME}/etc/nagios.cfg
 
 # Copy example config in-case the user has started with empty var or etc
 
-RUN mkdir -p /orig/var && mkdir -p /orig/etc  && \
-    cp -Rp ${NAGIOS_HOME}/var/* /orig/var/       && \
-    cp -Rp ${NAGIOS_HOME}/etc/* /orig/etc/
+RUN mkdir -p /orig/var                     && \
+    mkdir -p /orig/etc                     && \
+    mkdir -p /orig/xinetd.d                && \
+    cp -Rp ${NAGIOS_HOME}/var/* /orig/var/ && \
+    cp -Rp ${NAGIOS_HOME}/etc/* /orig/etc/ && \
+    cp -Rp /etc/xinetd.d/* /orig/xinetd.d/
 
 RUN a2enmod session         && \
     a2enmod session_cookie  && \

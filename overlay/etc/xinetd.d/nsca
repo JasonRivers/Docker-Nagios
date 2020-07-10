@@ -1,0 +1,12 @@
+service nsca
+{
+    type        = UNLISTED
+    port        = 5667
+    socket_type = stream
+    protocol    = tcp
+    wait        = no
+    user        = nagios
+    server      = /opt/nagios/bin/nsca
+    server_args = -c /opt/nagios/etc/nsca.cfg --inetd
+    disable     = no
+}
