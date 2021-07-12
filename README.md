@@ -4,7 +4,16 @@ Docker image for Nagios
 
 Build Status: [![Build Status](https://travis-ci.org/JasonRivers/Docker-Nagios.svg?branch=master)](https://travis-ci.org/JasonRivers/Docker-Nagios)
 
-Nagios Core 4.4.5 running on Ubuntu 16.04 LTS with NagiosGraph & NRPE
+Nagios Core 4.4.6 running on Ubuntu 20.04 LTS with NagiosGraph & NRPE
+
+| Product | Version |
+| ------- | ------- |
+| Nagios Core | 4.4.6 |
+| Nagios Plugins | 2.3.3 |
+| NRPE | 4.0.3 |
+| NCPA | 2.3.1 |
+| NSCA | 2.10.0 |
+
 
 ### Configurations
 Nagios Configuration lives in /opt/nagios/etc
