@@ -53,6 +53,7 @@ RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set
         libgd-gd2-perl                      \
         libjson-perl                        \
         libldap2-dev                        \
+        libmonitoring-plugin-perl           \
         libmysqlclient-dev                  \
         libnagios-object-perl               \
         libnet-snmp-perl                    \
@@ -60,6 +61,7 @@ RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set
         libnet-tftp-perl                    \
         libnet-xmpp-perl                    \
         libpq-dev                           \
+        libradsec-dev                       \
         libredis-perl                       \
         librrds-perl                        \
         libssl-dev                          \
@@ -71,7 +73,8 @@ RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set
         php-cli                             \
         php-gd                              \
         postfix                             \
-        python3-pip                          \
+        python3-pip                         \
+        python3-nagiosplugin                \
         rsyslog                             \
         runit                               \
         smbclient                           \
