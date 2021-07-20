@@ -45,13 +45,26 @@ docker run --name nagios4  \
   -p 0.0.0.0:8080:80 jasonrivers/nagios:latest
 ```
 
+Run with a postfix setup for an externam authenticated mail relay server (such as Google mail SMTP server):
+```sh
+docker run --name nagios4 \
+  -e SYSTEM_TIMEZONE=Europe/Paris \
+  -e MAIL_RELAY_USERNAME=<my.username>@gmail.com \
+  -e MAIL_RELAY_PASSWORD=<my.password> \
+  -e MAIL_RELAY_HOST=[smtp.gmail.com]:587 \
+  -p 0.0.0.0:8080:80 jasonrivers/nagios:latest
+```
+
 Note: The path for the custom plugins will be /opt/Custom-Nagios-Plugins, you will need to reference this directory in your configuration scripts.
 
 There are a number of environment variables that you can use to adjust the behaviour of the container:
 
 | Environamne Variable | Description |
 |--------|--------|
-| MAIL_RELAY_HOST | Set Postfix relayhost |
+| MAIL_RELAY_HOST | set Postfix relayhost |
+| MAIL_RELAY_USERNAME | set Postfix relay username |
+| MAIL_RELAY_PASSWORD | set Postfix relay password |
+| MAIL_MYNETWORKS | set Postfix mynetworks value(s) |
 | MAIL_INET_PROTOCOLS | set the inet_protocols in postfix |
 | NAGIOS_FQDN | set the server Fully Qualified Domain Name in postfix |
 | NAGIOS_TIMEZONE | set the timezone of the server |

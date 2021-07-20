@@ -1,8 +1,25 @@
 #!/bin/bash
 
-
+if [ ! -z "${MAIL_MYNETWORKS}" ]; then
+    echo "setting mynetworks = ${MAIL_MYNETWORKS}"
+    postconf -e mynetworks="${MAIL_MYNETWORKS}"
+fi
 if ! [ "${MAIL_RELAY_HOST}" = "" ]; then
-    sed -i "s/relayhost =.*/relayhost = ${MAIL_RELAY_HOST}/" /etc/postfix/main.cf
+    postconf relayhost=${MAIL_RELAY_HOST}
+fi
+if ! [ "${MAIL_RELAY_HOST}" = "" ] && [ "${MAIL_RELAY_USERNAME}" ] && [ "${MAIL_RELAY_PASSWORD}" ]; then
+    echo "${MAIL_RELAY_HOST}    ${MAIL_RELAY_USERNAME}:${MAIL_RELAY_PASSWORD}" > /etc/postfix/sasl_passwd
+    postmap /etc/postfix/sasl_passwd
+    postconf relayhost=${MAIL_RELAY_HOST}
+    postconf compatibility_level=2
+    postconf smtp_sasl_auth_enable=yes
+    postconf smtp_sasl_password_maps=hash:/etc/postfix/sasl_passwd
+    postconf smtp_sasl_security_options=noanonymous
+    postconf smtp_tls_CAfile=/etc/postfix/cacert.pem
+    postconf smtp_use_tls=yes
+    rm /etc/postfix/sasl_passwd
+    unset POSTFIX_EMAIL
+    unset POSTFIX_EMAILPASS
 fi
 if ! [ "${MAIL_INET_PROTOCOLS}" = "" ]; then 
     sed -i "s/inet_protocols =.*/inet_protocols = ${MAIL_INET_PROTOCOLS}/" /etc/postfix/main.cf
