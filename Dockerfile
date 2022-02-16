@@ -45,9 +45,12 @@ RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set
         libapache2-mod-php                  \
         libcache-memcached-perl             \
         libcgi-pm-perl                      \
+	libcrypt-des-perl                   \
+        libcrypt-rijndael-perl              \
         libdbd-mysql-perl                   \
         libdbi-dev                          \
         libdbi-perl                         \
+        libdigest-hmac-perl                 \
         libfreeradius-dev                   \
         libgdchart-gd2-xpm-dev              \
         libgd-gd2-perl                      \
