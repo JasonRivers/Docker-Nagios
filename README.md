@@ -69,5 +69,5 @@ The default credentials for the web interface is `nagiosadmin` / `nagios`
 * JR-Nagios-Plugins -  custom plugins I've created [<https://github.com/JasonRivers/nagios-plugins>]
 * WL-Nagios-Plugins -  custom plugins from William Leibzon [<https://github.com/willixix/WL-NagiosPlugins>]
 * JE-Nagios-Plugins -  custom plugins from Justin Ellison [<https://github.com/justintime/nagios-plugins>]
-
-
+* check-mqtt - custom plugin for mqtt monitoring from Jan-Piet Mens [<https://github.com/jpmens/check-mqtt.git>]
+* check_sql - custom pluging for MSSQL monitoring from Dan Fruehauf [<https://github.com/danfruehauf/nagios-plugins>]
