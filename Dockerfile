@@ -75,6 +75,7 @@ RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set
         postfix                             \
         python3-pip                         \
         python3-nagiosplugin                \
+	rsync				    \
         rsyslog                             \
         runit                               \
         smbclient                           \
