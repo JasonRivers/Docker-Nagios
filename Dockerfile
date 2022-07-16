@@ -17,8 +17,8 @@ ENV NG_NAGIOS_CONFIG_FILE  ${NAGIOS_HOME}/etc/nagios.cfg
 ENV NG_CGI_DIR             ${NAGIOS_HOME}/sbin
 ENV NG_WWW_DIR             ${NAGIOS_HOME}/share/nagiosgraph
 ENV NG_CGI_URL             /cgi-bin
-ENV NAGIOS_BRANCH          nagios-4.4.6
-ENV NAGIOS_PLUGINS_BRANCH  release-2.3.3
+ENV NAGIOS_BRANCH          nagios-4.4.7
+ENV NAGIOS_PLUGINS_BRANCH  release-2.4.0
 ENV NRPE_BRANCH            nrpe-4.0.3
 ENV NCPA_BRANCH            v2.3.1
 ENV NSCA_BRANCH            nsca-2.10.0
@@ -244,7 +244,7 @@ RUN echo "use_timezone=${NAGIOS_TIMEZONE}" >> ${NAGIOS_HOME}/etc/nagios.cfg
 RUN mkdir -p /orig/var                     && \
     mkdir -p /orig/etc                     && \
     cp -Rp ${NAGIOS_HOME}/var/* /orig/var/ && \
-    cp -Rp ${NAGIOS_HOME}/etc/* /orig/etc/ 
+    cp -Rp ${NAGIOS_HOME}/etc/* /orig/etc/
 
 RUN a2enmod session         && \
     a2enmod session_cookie  && \
@@ -276,7 +276,7 @@ RUN echo "ServerName ${NAGIOS_FQDN}" > /etc/apache2/conf-available/servername.co
     ln -s /etc/apache2/conf-available/servername.conf /etc/apache2/conf-enabled/servername.conf    && \
     ln -s /etc/apache2/conf-available/timezone.conf /etc/apache2/conf-enabled/timezone.conf
 
-EXPOSE 80 5667 
+EXPOSE 80 5667
 
 VOLUME "${NAGIOS_HOME}/var" "${NAGIOS_HOME}/etc" "/var/log/apache2" "/opt/Custom-Nagios-Plugins" "/opt/nagiosgraph/var" "/opt/nagiosgraph/etc"
 
