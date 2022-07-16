@@ -4,12 +4,12 @@ Docker image for Nagios
 
 Build Status: [![Build Status](https://travis-ci.org/JasonRivers/Docker-Nagios.svg?branch=master)](https://travis-ci.org/JasonRivers/Docker-Nagios)
 
-Nagios Core 4.4.6 running on Ubuntu 20.04 LTS with NagiosGraph & NRPE
+Nagios Core 4.4.7 running on Ubuntu 20.04 LTS with NagiosGraph & NRPE
 
 | Product | Version |
 | ------- | ------- |
-| Nagios Core | 4.4.6 |
-| Nagios Plugins | 2.3.3 |
+| Nagios Core | 4.4.7 |
+| Nagios Plugins | 2.4.0 |
 | NRPE | 4.0.3 |
 | NCPA | 2.3.1 |
 | NSCA | 2.10.0 |
@@ -56,7 +56,7 @@ There are a number of environment variables that you can use to adjust the behav
 | NAGIOS_FQDN | set the server Fully Qualified Domain Name in postfix |
 | NAGIOS_TIMEZONE | set the timezone of the server |
 
-For best results your Nagios image should have access to both IPv4 & IPv6 networks 
+For best results your Nagios image should have access to both IPv4 & IPv6 networks
 
 #### Credentials
 
