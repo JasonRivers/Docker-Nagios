@@ -194,7 +194,8 @@ RUN cd /opt                                                                     
     git clone https://github.com/nagiosenterprises/check_mssql_collection.git   nagios-mssql  && \
     git clone https://github.com/jpmens/check-mqtt.git           jpmens-mqtt        && \
     git clone https://github.com/danfruehauf/nagios-plugins.git  DF-Nagios-Plugins  && \
-    chmod +x /opt/WL-Nagios-Plugins/check*                                          && \
+    find WL-Nagios-Plugins -type f -name 'check_*.pl' -exec sed -i.bak 's!/usr/lib/nagios/plugins!/opt/WL-Nagios-Plugins!' {} +  && \
+    chmod +x /opt/WL-Nagios-Plugins/check_*.pl                                      && \
     chmod +x /opt/JE-Nagios-Plugins/check_mem/check_mem.pl                          && \
     chmod +x /opt/jpmens-mqtt/check-mqtt.py                                         && \
     chmod +x /opt/DF-Nagios-Plugins/check_sql/check_sql                             && \
