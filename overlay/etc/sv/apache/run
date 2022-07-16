@@ -5,4 +5,8 @@
 
 export TZ="${NAGIOS_TIMEZONE}"
 
+if ! [ "${NAGIOS_FQDN}" = "" ]; then
+    echo "ServerName ${NAGIOS_FQDN}" > /etc/apache2/conf-available/servername.conf
+fi
+
 exec /usr/sbin/apache2 -D NO_DETACH

@@ -1,14 +1,18 @@
 #!/bin/bash
 
-
 if ! [ "${MAIL_RELAY_HOST}" = "" ]; then
     sed -i "s/relayhost =.*/relayhost = ${MAIL_RELAY_HOST}/" /etc/postfix/main.cf
 fi
-if ! [ "${MAIL_INET_PROTOCOLS}" = "" ]; then 
+if ! [ "${MAIL_INET_PROTOCOLS}" = "" ]; then
     sed -i "s/inet_protocols =.*/inet_protocols = ${MAIL_INET_PROTOCOLS}/" /etc/postfix/main.cf
 fi
-sed -i "s/myhostname =.*/myhostname = $(hostname)/" /etc/postfix/main.cf
-sed -i "s/mydestination =.*/mydestination = ${NAGIOS_FQDN}, \$myhostname, localhost.localdomain, localhost/" /etc/postfix/main.cf
+if ! [ "${NAGIOS_FQDN}" = "" ]; then
+    sed -i "s/myhostname =.*/myhostname = ${NAGIOS_FQDN}/" /etc/postfix/main.cf
+    sed -i "s/mydestination =.*/mydestination = ${NAGIOS_FQDN}, localhost.localdomain, localhost/" /etc/postfix/main.cf
+else
+    sed -i "s/myhostname =.*/myhostname = $(hostname)/" /etc/postfix/main.cf
+    sed -i "s/mydestination =.*/mydestination = $(hostname), localhost.localdomain, localhost/" /etc/postfix/main.cf
+fi
 
 sed -i "/^myorigin =.*/d" /etc/postfix/main.cf
 echo "${NAGIOS_FQDN}" > /etc/mailname
