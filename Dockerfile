@@ -17,11 +17,11 @@ ENV NG_NAGIOS_CONFIG_FILE  ${NAGIOS_HOME}/etc/nagios.cfg
 ENV NG_CGI_DIR             ${NAGIOS_HOME}/sbin
 ENV NG_WWW_DIR             ${NAGIOS_HOME}/share/nagiosgraph
 ENV NG_CGI_URL             /cgi-bin
-ENV NAGIOS_BRANCH          nagios-4.4.6
-ENV NAGIOS_PLUGINS_BRANCH  release-2.3.3
+ENV NAGIOS_BRANCH          nagios-4.4.7
+ENV NAGIOS_PLUGINS_BRANCH  release-2.4.0
 ENV NRPE_BRANCH            nrpe-4.0.3
-ENV NCPA_BRANCH            v2.3.1
-ENV NSCA_BRANCH            nsca-2.10.0
+ENV NCPA_BRANCH            v2.4.0
+ENV NSCA_BRANCH            nsca-2.10.2
 
 
 RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set-selections  && \
@@ -133,14 +133,17 @@ RUN cd /tmp                                                                     
     ./configure                                                 \
         --prefix=${NAGIOS_HOME}                                 \
         --with-ipv6                                             \
-        --with-ping6-command="/bin/ping6 -n -U -W %d -c %d %s"  \
+        --with-ping-command="/usr/bin/ping -n -U -W %d -c %d %s"  \
+        --with-ping6-command="/usr/bin/ping -6 -n -U -W %d -c %d %s"  \
                                                                                               && \
     make                                                                                      && \
     make install                                                                              && \
     make clean                                                                                && \
     mkdir -p /usr/lib/nagios/plugins                                                          && \
     ln -sf ${NAGIOS_HOME}/libexec/utils.pm /usr/lib/nagios/plugins                            && \
-    cd /tmp && rm -Rf nagios-plugins
+    cd /tmp && rm -Rf nagios-plugins                                                          && \
+    chown root:root /opt/nagios/libexec/check_icmp                                            && \
+    chmod u+s /opt/nagios/libexec/check_icmp
 
 RUN wget -O ${NAGIOS_HOME}/libexec/check_ncpa.py https://raw.githubusercontent.com/NagiosEnterprises/ncpa/${NCPA_BRANCH}/client/check_ncpa.py  && \
     chmod +x ${NAGIOS_HOME}/libexec/check_ncpa.py
@@ -208,6 +211,9 @@ RUN cd /opt                                                                     
     cp /opt/DF-Nagios-Plugins/check_jenkins/check_jenkins ${NAGIOS_HOME}/libexec/   && \
     cp /opt/DF-Nagios-Plugins/check_vpn/check_vpn ${NAGIOS_HOME}/libexec/
 
+RUN cd /tmp && \
+    wget https://github.com/chriscareycode/nagiostv-react/releases/download/v0.8.5/nagiostv-0.8.5.tar.gz && \
+    tar xf nagiostv-0.8.5.tar.gz -C /opt/nagios/share/
 
 RUN sed -i.bak 's/.*\=www\-data//g' /etc/apache2/envvars
 RUN export DOC_ROOT="DocumentRoot $(echo $NAGIOS_HOME/share)"                         && \
