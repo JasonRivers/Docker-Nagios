@@ -22,6 +22,7 @@ ENV NAGIOS_PLUGINS_BRANCH  release-2.4.0
 ENV NRPE_BRANCH            nrpe-4.0.3
 ENV NCPA_BRANCH            v2.4.0
 ENV NSCA_BRANCH            nsca-2.10.2
+ENV NAGIOSTV_VERSION       0.8.5
 
 
 RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set-selections  && \
@@ -141,9 +142,9 @@ RUN cd /tmp                                                                     
     make clean                                                                                && \
     mkdir -p /usr/lib/nagios/plugins                                                          && \
     ln -sf ${NAGIOS_HOME}/libexec/utils.pm /usr/lib/nagios/plugins                            && \
-    cd /tmp && rm -Rf nagios-plugins                                                          && \
-    chown root:root /opt/nagios/libexec/check_icmp                                            && \
-    chmod u+s /opt/nagios/libexec/check_icmp
+    chown root:root ${NAGIOS_HOME}/libexec/check_icmp                                         && \
+    chmod u+s ${NAGIOS_HOME}/libexec/check_icmp                                               && \
+    cd /tmp && rm -Rf nagios-plugins                                                          
 
 RUN wget -O ${NAGIOS_HOME}/libexec/check_ncpa.py https://raw.githubusercontent.com/NagiosEnterprises/ncpa/${NCPA_BRANCH}/client/check_ncpa.py  && \
     chmod +x ${NAGIOS_HOME}/libexec/check_ncpa.py
@@ -212,8 +213,9 @@ RUN cd /opt                                                                     
     cp /opt/DF-Nagios-Plugins/check_vpn/check_vpn ${NAGIOS_HOME}/libexec/
 
 RUN cd /tmp && \
-    wget https://github.com/chriscareycode/nagiostv-react/releases/download/v0.8.5/nagiostv-0.8.5.tar.gz && \
-    tar xf nagiostv-0.8.5.tar.gz -C /opt/nagios/share/
+    wget https://github.com/chriscareycode/nagiostv-react/releases/download/v${NAGIOSTV_VERSION}/nagiostv-${NAGIOSTV_VERSION}.tar.gz && \
+    tar xf nagiostv-${NAGIOSTV_VERSION}.tar.gz -C /opt/nagios/share/ && \
+    rm /tmp/nagiostv-${NAGIOSTV_VERSION}.tar.gz
 
 RUN sed -i.bak 's/.*\=www\-data//g' /etc/apache2/envvars
 RUN export DOC_ROOT="DocumentRoot $(echo $NAGIOS_HOME/share)"                         && \
@@ -245,12 +247,17 @@ ADD overlay /
 
 RUN echo "use_timezone=${NAGIOS_TIMEZONE}" >> ${NAGIOS_HOME}/etc/nagios.cfg
 
+
 # Copy example config in-case the user has started with empty var or etc
 
 RUN mkdir -p /orig/var                     && \
     mkdir -p /orig/etc                     && \
     cp -Rp ${NAGIOS_HOME}/var/* /orig/var/ && \
     cp -Rp ${NAGIOS_HOME}/etc/* /orig/etc/ 
+
+## Set the permissions for example config
+RUN find /opt/nagios/etc \! -user ${NAGIOS_USER} -exec chown ${NAGIOS_USER}:${NAGIOS_GROUP} '{}' + && \
+    find /orig/etc \! -user ${NAGIOS_USER} -exec chown ${NAGIOS_USER}:${NAGIOS_GROUP} '{}' +
 
 RUN a2enmod session         && \
     a2enmod session_cookie  && \

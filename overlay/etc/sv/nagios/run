@@ -1,7 +1,6 @@
 #!/bin/bash
 
 echo "checking permissions for nagios & nagiosgraph"
-find /opt/nagios \! -user ${NAGIOS_USER} -exec chown ${NAGIOS_USER}:${NAGIOS_GROUP} '{}' +
 find /opt/nagiosgraph \! -user ${NAGIOS_USER} -exec chown ${NAGIOS_USER}:${NAGIOS_GROUP} '{}' +
 if ! [ -f /opt/nagiosgraph/etc/ngshared.pm ]; then
 echo "Configuring Nagiosgraph"

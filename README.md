@@ -8,10 +8,10 @@ Nagios Core 4.4.6 running on Ubuntu 20.04 LTS with NagiosGraph & NRPE
 
 | Product | Version |
 | ------- | ------- |
-| Nagios Core | 4.4.6 |
-| Nagios Plugins | 2.3.3 |
+| Nagios Core | 4.4.7 |
+| Nagios Plugins | 2.4.0 |
 | NRPE | 4.0.3 |
-| NCPA | 2.3.1 |
+| NCPA | 2.4.0 |
 | NSCA | 2.10.0 |
 
 
