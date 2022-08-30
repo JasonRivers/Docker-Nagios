@@ -127,9 +127,12 @@ RUN cd /tmp                                                                     
     make clean                                                                       && \
     cd /tmp && rm -Rf nagioscore
 
+ADD patches/nagios-plugins-2.4.0_check_ifstatus.patch /tmp/nagios-plugins-2.4.0_check_ifstatus.patch
+
 RUN cd /tmp                                                                                   && \
     git clone https://github.com/nagios-plugins/nagios-plugins.git -b $NAGIOS_PLUGINS_BRANCH  && \
     cd nagios-plugins                                                                         && \
+    patch plugins-scripts/check_ifstatus.pl /tmp/nagios-plugins-2.4.0_check_ifstatus.patch    && \
     ./tools/setup                                                                             && \
     ./configure                                                 \
         --prefix=${NAGIOS_HOME}                                 \
