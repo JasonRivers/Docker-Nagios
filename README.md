@@ -59,7 +59,7 @@ There are a number of environment variables that you can use to adjust the behav
 | NAGIOS_FQDN | set the server Fully Qualified Domain Name in postfix |
 | NAGIOS_TIMEZONE | set the timezone of the server |
 
-For best results your Nagios image should have access to both IPv4 & IPv6 networks 
+For best results your Nagios image should have access to both IPv4 & IPv6 networks
 
 #### Credentials
 

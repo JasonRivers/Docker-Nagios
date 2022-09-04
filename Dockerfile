@@ -256,7 +256,7 @@ RUN echo "use_timezone=${NAGIOS_TIMEZONE}" >> ${NAGIOS_HOME}/etc/nagios.cfg
 RUN mkdir -p /orig/var                     && \
     mkdir -p /orig/etc                     && \
     cp -Rp ${NAGIOS_HOME}/var/* /orig/var/ && \
-    cp -Rp ${NAGIOS_HOME}/etc/* /orig/etc/ 
+    cp -Rp ${NAGIOS_HOME}/etc/* /orig/etc/
 
 ## Set the permissions for example config
 RUN find /opt/nagios/etc \! -user ${NAGIOS_USER} -exec chown ${NAGIOS_USER}:${NAGIOS_GROUP} '{}' + && \
@@ -292,7 +292,7 @@ RUN echo "ServerName ${NAGIOS_FQDN}" > /etc/apache2/conf-available/servername.co
     ln -s /etc/apache2/conf-available/servername.conf /etc/apache2/conf-enabled/servername.conf    && \
     ln -s /etc/apache2/conf-available/timezone.conf /etc/apache2/conf-enabled/timezone.conf
 
-EXPOSE 80 5667 
+EXPOSE 80 5667
 
 VOLUME "${NAGIOS_HOME}/var" "${NAGIOS_HOME}/etc" "/var/log/apache2" "/opt/Custom-Nagios-Plugins" "/opt/nagiosgraph/var" "/opt/nagiosgraph/etc"
 
