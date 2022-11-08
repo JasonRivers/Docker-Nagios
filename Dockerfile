@@ -17,9 +17,9 @@ ENV NG_NAGIOS_CONFIG_FILE  ${NAGIOS_HOME}/etc/nagios.cfg
 ENV NG_CGI_DIR             ${NAGIOS_HOME}/sbin
 ENV NG_WWW_DIR             ${NAGIOS_HOME}/share/nagiosgraph
 ENV NG_CGI_URL             /cgi-bin
-ENV NAGIOS_BRANCH          nagios-4.4.7
-ENV NAGIOS_PLUGINS_BRANCH  release-2.4.0
-ENV NRPE_BRANCH            nrpe-4.0.3
+ENV NAGIOS_BRANCH          nagios-4.4.8
+ENV NAGIOS_PLUGINS_BRANCH  release-2.4.1
+ENV NRPE_BRANCH            nrpe-4.1.0
 ENV NCPA_BRANCH            v2.4.0
 ENV NSCA_BRANCH            nsca-2.10.2
 ENV NAGIOSTV_VERSION       0.8.5
@@ -127,12 +127,9 @@ RUN cd /tmp                                                                     
     make clean                                                                       && \
     cd /tmp && rm -Rf nagioscore
 
-ADD patches/nagios-plugins-2.4.0_check_ifstatus.patch /tmp/nagios-plugins-2.4.0_check_ifstatus.patch
-
 RUN cd /tmp                                                                                   && \
     git clone https://github.com/nagios-plugins/nagios-plugins.git -b $NAGIOS_PLUGINS_BRANCH  && \
     cd nagios-plugins                                                                         && \
-    patch plugins-scripts/check_ifstatus.pl /tmp/nagios-plugins-2.4.0_check_ifstatus.patch    && \
     ./tools/setup                                                                             && \
     ./configure                                                 \
         --prefix=${NAGIOS_HOME}                                 \
