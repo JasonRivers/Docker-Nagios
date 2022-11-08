@@ -283,6 +283,9 @@ RUN rm /opt/nagiosgraph/etc/fix-nagiosgraph-multiple-selection.sh
 # enable all runit services
 RUN ln -s /etc/sv/* /etc/service
 
+# fix ping permissions for nagios user
+RUN chmod u+s /usr/bin/ping
+
 ENV APACHE_LOCK_DIR /var/run
 ENV APACHE_LOG_DIR /var/log/apache2
 
