@@ -17,11 +17,12 @@ ENV NG_NAGIOS_CONFIG_FILE  ${NAGIOS_HOME}/etc/nagios.cfg
 ENV NG_CGI_DIR             ${NAGIOS_HOME}/sbin
 ENV NG_WWW_DIR             ${NAGIOS_HOME}/share/nagiosgraph
 ENV NG_CGI_URL             /cgi-bin
-ENV NAGIOS_BRANCH          nagios-4.4.7
-ENV NAGIOS_PLUGINS_BRANCH  release-2.4.0
-ENV NRPE_BRANCH            nrpe-4.0.3
-ENV NCPA_BRANCH            v2.3.1
-ENV NSCA_BRANCH            nsca-2.10.0
+ENV NAGIOS_BRANCH          nagios-4.4.8
+ENV NAGIOS_PLUGINS_BRANCH  release-2.4.1
+ENV NRPE_BRANCH            nrpe-4.1.0
+ENV NCPA_BRANCH            v2.4.0
+ENV NSCA_BRANCH            nsca-2.10.2
+ENV NAGIOSTV_VERSION       0.8.5
 
 
 RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set-selections  && \
@@ -133,13 +134,16 @@ RUN cd /tmp                                                                     
     ./configure                                                 \
         --prefix=${NAGIOS_HOME}                                 \
         --with-ipv6                                             \
-        --with-ping6-command="/bin/ping6 -n -U -W %d -c %d %s"  \
+        --with-ping-command="/usr/bin/ping -n -U -W %d -c %d %s"  \
+        --with-ping6-command="/usr/bin/ping -6 -n -U -W %d -c %d %s"  \
                                                                                               && \
     make                                                                                      && \
     make install                                                                              && \
     make clean                                                                                && \
     mkdir -p /usr/lib/nagios/plugins                                                          && \
     ln -sf ${NAGIOS_HOME}/libexec/utils.pm /usr/lib/nagios/plugins                            && \
+    chown root:root ${NAGIOS_HOME}/libexec/check_icmp                                         && \
+    chmod u+s ${NAGIOS_HOME}/libexec/check_icmp                                               && \
     cd /tmp && rm -Rf nagios-plugins
 
 RUN wget -O ${NAGIOS_HOME}/libexec/check_ncpa.py https://raw.githubusercontent.com/NagiosEnterprises/ncpa/${NCPA_BRANCH}/client/check_ncpa.py  && \
@@ -209,6 +213,10 @@ RUN cd /opt                                                                     
     cp /opt/DF-Nagios-Plugins/check_jenkins/check_jenkins ${NAGIOS_HOME}/libexec/   && \
     cp /opt/DF-Nagios-Plugins/check_vpn/check_vpn ${NAGIOS_HOME}/libexec/
 
+RUN cd /tmp && \
+    wget https://github.com/chriscareycode/nagiostv-react/releases/download/v${NAGIOSTV_VERSION}/nagiostv-${NAGIOSTV_VERSION}.tar.gz && \
+    tar xf nagiostv-${NAGIOSTV_VERSION}.tar.gz -C /opt/nagios/share/ && \
+    rm /tmp/nagiostv-${NAGIOSTV_VERSION}.tar.gz
 
 RUN sed -i.bak 's/.*\=www\-data//g' /etc/apache2/envvars
 RUN export DOC_ROOT="DocumentRoot $(echo $NAGIOS_HOME/share)"                         && \
@@ -240,12 +248,17 @@ ADD overlay /
 
 RUN echo "use_timezone=${NAGIOS_TIMEZONE}" >> ${NAGIOS_HOME}/etc/nagios.cfg
 
+
 # Copy example config in-case the user has started with empty var or etc
 
 RUN mkdir -p /orig/var                     && \
     mkdir -p /orig/etc                     && \
     cp -Rp ${NAGIOS_HOME}/var/* /orig/var/ && \
     cp -Rp ${NAGIOS_HOME}/etc/* /orig/etc/
+
+## Set the permissions for example config
+RUN find /opt/nagios/etc \! -user ${NAGIOS_USER} -exec chown ${NAGIOS_USER}:${NAGIOS_GROUP} '{}' + && \
+    find /orig/etc \! -user ${NAGIOS_USER} -exec chown ${NAGIOS_USER}:${NAGIOS_GROUP} '{}' +
 
 RUN a2enmod session         && \
     a2enmod session_cookie  && \
@@ -267,6 +280,9 @@ RUN rm /opt/nagiosgraph/etc/fix-nagiosgraph-multiple-selection.sh
 
 # enable all runit services
 RUN ln -s /etc/sv/* /etc/service
+
+# fix ping permissions for nagios user
+RUN chmod u+s /usr/bin/ping
 
 ENV APACHE_LOCK_DIR /var/run
 ENV APACHE_LOG_DIR /var/log/apache2

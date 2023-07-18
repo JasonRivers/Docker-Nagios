@@ -1,0 +1,15 @@
+--- /root/bin/check_ifstatus    2022-04-07 14:00:01.000000000 -0700
++++ /root/bin/check_ifstatus    2022-04-21 11:26:32.923348000 -0700
+@@ -136,11 +136,11 @@
+ }
+ 
+ 
+-push(@snmpoids,$snmpLocIfDescr);
+ push(@snmpoids,$snmpIfOperStatus);
+ push(@snmpoids,$snmpIfAdminStatus);
+ push(@snmpoids,$snmpIfDescr);
+ push(@snmpoids,$snmpIfType);
++push(@snmpoids,$snmpLocIfDescr) if ( defined $ifXTable);
+ push(@snmpoids,$snmpIfName) if ( defined $ifXTable);
+ push(@snmpoids,$snmpIfAlias) if ( defined $ifXTable);
+ 
