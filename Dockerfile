@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 MAINTAINER Jason Rivers <jason@jasonrivers.co.uk>
 
 ENV NAGIOS_HOME            /opt/nagios
@@ -17,12 +17,12 @@ ENV NG_NAGIOS_CONFIG_FILE  ${NAGIOS_HOME}/etc/nagios.cfg
 ENV NG_CGI_DIR             ${NAGIOS_HOME}/sbin
 ENV NG_WWW_DIR             ${NAGIOS_HOME}/share/nagiosgraph
 ENV NG_CGI_URL             /cgi-bin
-ENV NAGIOS_BRANCH          nagios-4.4.8
-ENV NAGIOS_PLUGINS_BRANCH  release-2.4.1
+ENV NAGIOS_BRANCH          nagios-4.4.14
+ENV NAGIOS_PLUGINS_BRANCH  release-2.4.6
 ENV NRPE_BRANCH            nrpe-4.1.0
-ENV NCPA_BRANCH            v2.4.0
+ENV NCPA_BRANCH            v2.4.1
 ENV NSCA_BRANCH            nsca-2.10.2
-ENV NAGIOSTV_VERSION       0.8.5
+ENV NAGIOSTV_VERSION       0.8.7
 
 
 RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set-selections  && \
@@ -88,7 +88,7 @@ RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set
         snmpd                               \
         snmp-mibs-downloader                \
         unzip                               \
-        python                              \
+        python3                             \
                                                 && \
     apt-get clean && rm -Rf /var/lib/apt/lists/*
 
