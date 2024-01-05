@@ -8,8 +8,8 @@ Nagios Core 4.4.14 running on Ubuntu 22.04 LTS with NagiosGraph & NRPE
 
 | Product | Version |
 | ------- | ------- |
-| Nagios Core | 4.4.14 |
-| Nagios Plugins | 2.4.6 |
+| Nagios Core | 4.5.0 |
+| Nagios Plugins | 2.4.7 |
 | NRPE | 4.1.0 |
 | NCPA | 2.4.1 |
 | NSCA | 2.10.2 |
