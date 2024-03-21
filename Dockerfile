@@ -1,5 +1,6 @@
 FROM ubuntu:22.04
-MAINTAINER Jason Rivers <jason@jasonrivers.co.uk>
+LABEL author="Jason Rivers <jason@jasonrivers.co.uk>"
+LABEL forkedby="Dovetail BV"
 
 ENV NAGIOS_HOME            /opt/nagios
 ENV NAGIOS_USER            nagios
@@ -168,7 +169,9 @@ RUN cd /tmp                                                 && \
     ./configure                                                \
         --prefix=${NAGIOS_HOME}                                \
         --with-nsca-user=${NAGIOS_USER}                        \
-        --with-nsca-grp=${NAGIOS_GROUP}                     && \
+        --with-nsca-grp=${NAGIOS_GROUP}                        \
+        --with-mcrypt-lib=/usr/lib64/                          \
+        --with-mcrypt-inc=/usr/include                      && \
     make all                                                && \
     cp src/nsca ${NAGIOS_HOME}/bin/                         && \
     cp src/send_nsca ${NAGIOS_HOME}/bin/                    && \
@@ -293,7 +296,5 @@ RUN echo "ServerName ${NAGIOS_FQDN}" > /etc/apache2/conf-available/servername.co
     ln -s /etc/apache2/conf-available/timezone.conf /etc/apache2/conf-enabled/timezone.conf
 
 EXPOSE 80 5667 
-
-VOLUME "${NAGIOS_HOME}/var" "${NAGIOS_HOME}/etc" "/var/log/apache2" "/opt/Custom-Nagios-Plugins" "/opt/nagiosgraph/var" "/opt/nagiosgraph/etc"
 
 CMD [ "/usr/local/bin/start_nagios" ]
