@@ -1,10 +1,8 @@
 # Docker-Nagios
 
-Docker image for Nagios
+Docker image for Nagios forked by Dovetail BV. This image runs in AWS Elasticbeanstalk with an EFS attached.
 
-Build Status: [![Build Status](https://travis-ci.org/JasonRivers/Docker-Nagios.svg?branch=master)](https://travis-ci.org/JasonRivers/Docker-Nagios)
-
-Nagios Core 4.4.14 running on Ubuntu 22.04 LTS with NagiosGraph & NRPE
+Nagios Core 4.5.0 running on Ubuntu 22.04 LTS with NagiosGraph & NRPE
 
 | Product | Version |
 | ------- | ------- |
