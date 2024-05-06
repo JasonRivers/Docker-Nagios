@@ -17,10 +17,10 @@ ENV NG_NAGIOS_CONFIG_FILE  ${NAGIOS_HOME}/etc/nagios.cfg
 ENV NG_CGI_DIR             ${NAGIOS_HOME}/sbin
 ENV NG_WWW_DIR             ${NAGIOS_HOME}/share/nagiosgraph
 ENV NG_CGI_URL             /cgi-bin
-ENV NAGIOS_BRANCH          nagios-4.5.1
-ENV NAGIOS_PLUGINS_BRANCH  2.4.8
+ENV NAGIOS_BRANCH          nagios-4.5.2
+ENV NAGIOS_PLUGINS_BRANCH  release-2.4.10
 ENV NRPE_BRANCH            nrpe-4.1.0
-ENV NCPA_BRANCH            v3.0.1
+ENV NCPA_BRANCH            v3.0.2
 ENV NSCA_BRANCH            nsca-2.10.2
 ENV NAGIOSTV_VERSION       0.8.7
 
