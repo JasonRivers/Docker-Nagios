@@ -11,7 +11,7 @@ Nagios Core 4.5.2 running on Ubuntu 22.04 LTS with NagiosGraph & NRPE
 | Nagios Core | 4.5.2 |
 | Nagios Plugins | 2.4.10 |
 | NRPE | 4.1.0 |
-| NCPA | 3.0.2 |
+| NCPA | 3.1.0 |
 | NSCA | 2.10.2 |
 
 ### Configurations
