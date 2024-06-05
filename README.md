@@ -4,7 +4,7 @@ Docker image for Nagios
 
 Build Status: [![Build Status](https://travis-ci.org/JasonRivers/Docker-Nagios.svg?branch=master)](https://travis-ci.org/JasonRivers/Docker-Nagios)
 
-Nagios Core 4.5.2 running on Ubuntu 22.04 LTS with NagiosGraph & NRPE
+Nagios Core 4.5.2 running on Ubuntu 24.04 LTS with NagiosGraph & NRPE
 
 | Product | Version |
 | ------- | ------- |
