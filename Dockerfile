@@ -194,9 +194,7 @@ RUN cd /tmp                                                          && \
     cd /tmp && rm -Rf nagiosgraph
 
 RUN cd /opt                                                                         && \
-    python3 -m venv .venv                                                           && \
-    . .venv/bin/activate                                                            && \
-    pip install pymssql paho-mqtt                                                   && \
+    pip install --break-system-packages pymssql paho-mqtt                           && \
     git clone https://github.com/willixix/naglio-plugins.git     WL-Nagios-Plugins  && \
     git clone https://github.com/JasonRivers/nagios-plugins.git  JR-Nagios-Plugins  && \
     git clone https://github.com/justintime/nagios-plugins.git   JE-Nagios-Plugins  && \
