@@ -2,15 +2,15 @@
 
 Docker image for Nagios forked by Dovetail BV. This image runs in AWS Elasticbeanstalk with an EFS attached.
 
-Nagios Core 4.5.3 running on Ubuntu 22.04 LTS with NagiosGraph & NRPE
+Nagios Core 4.5.4 running on Ubuntu 22.04 LTS with NagiosGraph & NRPE
 
 | Product | Version |
 | ------- | ------- |
-| Nagios Core | 4.5.3 |
-| Nagios Plugins | 2.4.10 |
-| NRPE | 4.1.0 |
+| Nagios Core | 4.5.4 |
+| Nagios Plugins | 2.4.11 |
+| NRPE | 4.1.1 |
 | NCPA | 3.1.0 |
-| NSCA | 2.10.2 |
+| NSCA | 2.10.3 |
 | Nagios TV | 0.9.2 |
 
 ### Configurations
