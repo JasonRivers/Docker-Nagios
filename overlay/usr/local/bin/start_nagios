@@ -14,6 +14,16 @@ if [ -z "$(ls -A /opt/nagios/var)" ]; then
     cp -Rp /orig/var/* /opt/nagios/var/
 fi
 
+if [ -z "$(ls -A /opt/nagiosgraph/etc)" ]; then
+    echo "Started with empty /opt/nagiosgraph/etc, copying example data in-place"
+    cp -Rp /orig/graph-etc/* /opt/nagiosgraph/etc/
+fi
+
+if [ -z "$(ls -A /opt/nagiosgraph/var)" ]; then
+    echo "Started with empty /opt/nagiosgraph/var, copying example data in-place"
+    cp -Rp /orig/graph-var/* /opt/nagiosgraph/var/
+fi
+
 if [ ! -f "${NAGIOS_HOME}/etc/htpasswd.users" ] ; then
   htpasswd -c -b -s "${NAGIOS_HOME}/etc/htpasswd.users" "${NAGIOSADMIN_USER}" "${NAGIOSADMIN_PASS}"
   chown -R ${NAGIOS_USER}.${NAGIOS_GROUP} "${NAGIOS_HOME}/etc/htpasswd.users"

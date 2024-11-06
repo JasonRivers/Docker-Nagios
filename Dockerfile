@@ -17,10 +17,10 @@ ENV NG_NAGIOS_CONFIG_FILE  ${NAGIOS_HOME}/etc/nagios.cfg
 ENV NG_CGI_DIR             ${NAGIOS_HOME}/sbin
 ENV NG_WWW_DIR             ${NAGIOS_HOME}/share/nagiosgraph
 ENV NG_CGI_URL             /cgi-bin
-ENV NAGIOS_BRANCH          nagios-4.5.2
-ENV NAGIOS_PLUGINS_BRANCH  release-2.4.10
-ENV NRPE_BRANCH            nrpe-4.1.0
-ENV NCPA_BRANCH            v3.1.0
+ENV NAGIOS_BRANCH          nagios-4.5.7
+ENV NAGIOS_PLUGINS_BRANCH  release-2.4.12
+ENV NRPE_BRANCH            nrpe-4.1.1
+ENV NCPA_BRANCH            v3.1.1
 ENV NSCA_BRANCH            nsca-2.10.2
 ENV NAGIOSTV_VERSION       0.9.2
 
@@ -255,8 +255,12 @@ RUN echo "use_timezone=${NAGIOS_TIMEZONE}" >> ${NAGIOS_HOME}/etc/nagios.cfg
 
 RUN mkdir -p /orig/var                     && \
     mkdir -p /orig/etc                     && \
+    mkdir -p /orig/graph-etc                     && \
+    mkdir -p /orig/graph-var                     && \
     cp -Rp ${NAGIOS_HOME}/var/* /orig/var/ && \
-    cp -Rp ${NAGIOS_HOME}/etc/* /orig/etc/ 
+    cp -Rp ${NAGIOS_HOME}/etc/* /orig/etc/ && \
+    cp -Rp /opt/nagiosgraph/etc/* /orig/graph-etc && \
+    cp -Rp /opt/nagiosgraph/var/* /orig/graph-var
 
 ## Set the permissions for example config
 RUN find /opt/nagios/etc \! -user ${NAGIOS_USER} -exec chown ${NAGIOS_USER}:${NAGIOS_GROUP} '{}' + && \
