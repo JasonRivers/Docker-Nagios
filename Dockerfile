@@ -57,8 +57,10 @@ RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set
         libfreeradius-dev                   \
         libgdchart-gd2-xpm-dev              \
         libgd-gd2-perl                      \
-        libjson-perl                        \
+        libfile-slurp-perl                  \
         libldap2-dev                        \
+        libjson-perl                        \
+        libjson-xs-perl                     \
         libmonitoring-plugin-perl           \
         libmariadb-dev                      \
         libnagios-object-perl               \
@@ -214,6 +216,19 @@ RUN cd /opt                                                                     
     cp /opt/DF-Nagios-Plugins/check_sql/check_sql ${NAGIOS_HOME}/libexec/           && \
     cp /opt/DF-Nagios-Plugins/check_jenkins/check_jenkins ${NAGIOS_HOME}/libexec/   && \
     cp /opt/DF-Nagios-Plugins/check_vpn/check_vpn ${NAGIOS_HOME}/libexec/
+
+# Add check_nwc_health
+RUN cd /tmp && \
+    git clone https://github.com/lausser/check_nwc_health.git && \
+    cd check_nwc_health && \
+    git submodule update --init && \
+    autoreconf && \
+    ./configure && \
+    make && \
+    cp plugins-scripts/check_nwc_health ${NAGIOS_HOME}/libexec/ && \
+    cd /tmp/ &&\ 
+    rm -rf check_nwc_health
+
 
 RUN cd /tmp && \
     wget https://github.com/chriscareycode/nagiostv-react/releases/download/v${NAGIOSTV_VERSION}/nagiostv-${NAGIOSTV_VERSION}.tar.gz && \
