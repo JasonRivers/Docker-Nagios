@@ -270,7 +270,9 @@ RUN a2enmod session         && \
     a2enmod session_cookie  && \
     a2enmod session_crypto  && \
     a2enmod auth_form       && \
-    a2enmod request
+    a2enmod request         && \
+    a2enmod authnz_ldap
+
 
 RUN chmod +x /usr/local/bin/start_nagios        && \
     chmod +x /etc/sv/apache/run                 && \
