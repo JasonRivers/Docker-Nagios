@@ -55,8 +55,9 @@ RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set
         libdbi-perl                         \
         libdigest-hmac-perl                 \
         libfreeradius-dev                   \
-        libgdchart-gd2-xpm-dev              \
-        libgd-gd2-perl                      \
+        libgd-dev                           \
+        libxpm-dev                          \
+        libgd-perl                          \
         libjson-perl                        \
         libldap2-dev                        \
         libmonitoring-plugin-perl           \
