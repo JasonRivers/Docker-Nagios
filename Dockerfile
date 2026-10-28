@@ -100,19 +100,19 @@ RUN ( egrep -i "^${NAGIOS_GROUP}"    /etc/group || groupadd $NAGIOS_GROUP    )  
 RUN ( id -u $NAGIOS_USER    || useradd --system -d $NAGIOS_HOME -g $NAGIOS_GROUP    $NAGIOS_USER    )  && \
     ( id -u $NAGIOS_CMDUSER || useradd --system -d $NAGIOS_HOME -g $NAGIOS_CMDGROUP $NAGIOS_CMDUSER )
 
-RUN cd /tmp                                           && \
-    git clone https://github.com/multiplay/qstat.git  && \
-    cd qstat                                          && \
-    ./autogen.sh                                      && \
-    ./configure                                       && \
-    make                                              && \
-    make install                                      && \
-    make clean                                        && \
+RUN cd /tmp                                                     && \
+    git clone https://github.com/multiplay/qstat.git --depth 1  && \
+    cd qstat                                                    && \
+    ./autogen.sh                                                && \
+    ./configure                                                 && \
+    make                                                        && \
+    make install                                                && \
+    make clean                                                  && \
     cd /tmp && rm -Rf qstat
 
-RUN cd /tmp                                                                          && \
-    git clone https://github.com/NagiosEnterprises/nagioscore.git -b $NAGIOS_BRANCH  && \
-    cd nagioscore                                                                    && \
+RUN cd /tmp                                                                                    && \
+    git clone https://github.com/NagiosEnterprises/nagioscore.git -b $NAGIOS_BRANCH --depth 1  && \
+    cd nagioscore                                                                              && \
     ./configure                                  \
         --prefix=${NAGIOS_HOME}                  \
         --exec-prefix=${NAGIOS_HOME}             \
@@ -130,10 +130,10 @@ RUN cd /tmp                                                                     
     make clean                                                                       && \
     cd /tmp && rm -Rf nagioscore
 
-RUN cd /tmp                                                                                   && \
-    git clone https://github.com/nagios-plugins/nagios-plugins.git -b $NAGIOS_PLUGINS_BRANCH  && \
-    cd nagios-plugins                                                                         && \
-    ./tools/setup                                                                             && \
+RUN cd /tmp                                                                                             && \
+    git clone https://github.com/nagios-plugins/nagios-plugins.git -b $NAGIOS_PLUGINS_BRANCH --depth 1  && \
+    cd nagios-plugins                                                                                   && \
+    ./tools/setup                                                                                       && \
     ./configure                                                 \
         --prefix=${NAGIOS_HOME}                                 \
         --with-ipv6                                             \
@@ -152,9 +152,9 @@ RUN cd /tmp                                                                     
 RUN wget -O ${NAGIOS_HOME}/libexec/check_ncpa.py https://raw.githubusercontent.com/NagiosEnterprises/ncpa/${NCPA_BRANCH}/client/check_ncpa.py  && \
     chmod +x ${NAGIOS_HOME}/libexec/check_ncpa.py
 
-RUN cd /tmp                                                                  && \
-    git clone https://github.com/NagiosEnterprises/nrpe.git -b $NRPE_BRANCH  && \
-    cd nrpe                                                                  && \
+RUN cd /tmp                                                                           && \
+    git clone https://github.com/NagiosEnterprises/nrpe.git -b $NRPE_BRANCH --depth 1 && \
+            cd nrpe                                                                   && \
     ./configure                                   \
         --with-ssl=/usr/bin/openssl               \
         --with-ssl-lib=/usr/lib/x86_64-linux-gnu  \
@@ -164,10 +164,10 @@ RUN cd /tmp                                                                  && 
     make clean                                                               && \
     cd /tmp && rm -Rf nrpe
 
-RUN cd /tmp                                                 && \
-    git clone https://github.com/NagiosEnterprises/nsca.git && \
-    cd nsca                                                 && \
-    git checkout $NSCA_TAG                                  && \
+RUN cd /tmp                                                           && \
+    git clone https://github.com/NagiosEnterprises/nsca.git --depth 1 && \
+    cd nsca                                                           && \
+    git checkout $NSCA_TAG                                            && \
     ./configure                                                \
         --prefix=${NAGIOS_HOME}                                \
         --with-nsca-user=${NAGIOS_USER}                        \
@@ -180,9 +180,9 @@ RUN cd /tmp                                                 && \
     sed -i 's/^#server_address.*/server_address=0.0.0.0/'  ${NAGIOS_HOME}/etc/nsca.cfg && \
     cd /tmp && rm -Rf nsca
 
-RUN cd /tmp                                                          && \
-    git clone https://git.code.sf.net/p/nagiosgraph/git nagiosgraph  && \
-    cd nagiosgraph                                                   && \
+RUN cd /tmp                                                                   && \
+    git clone https://git.code.sf.net/p/nagiosgraph/git nagiosgraph --depth 1 && \
+    cd nagiosgraph                                                            && \
     ./install.pl --install                                      \
         --prefix /opt/nagiosgraph                               \
         --nagios-user ${NAGIOS_USER}                            \
@@ -193,14 +193,14 @@ RUN cd /tmp                                                          && \
     cp share/nagiosgraph.ssi ${NAGIOS_HOME}/share/ssi/common-header.ssi && \
     cd /tmp && rm -Rf nagiosgraph
 
-RUN cd /opt                                                                         && \
-    pip install --break-system-packages pymssql paho-mqtt                           && \
-    git clone https://github.com/willixix/naglio-plugins.git     WL-Nagios-Plugins  && \
-    git clone https://github.com/JasonRivers/nagios-plugins.git  JR-Nagios-Plugins  && \
-    git clone https://github.com/justintime/nagios-plugins.git   JE-Nagios-Plugins  && \
-    git clone https://github.com/nagiosenterprises/check_mssql_collection.git   nagios-mssql  && \
-    git clone https://github.com/jpmens/check-mqtt.git           jpmens-mqtt        && \
-    git clone https://github.com/danfruehauf/nagios-plugins.git  DF-Nagios-Plugins  && \
+RUN cd /opt                                                                                              && \
+    pip install --break-system-packages pymssql paho-mqtt                                                && \
+    git clone https://github.com/willixix/naglio-plugins.git     WL-Nagios-Plugins  --depth 1            && \
+    git clone https://github.com/JasonRivers/nagios-plugins.git  JR-Nagios-Plugins  --depth 1            && \
+    git clone https://github.com/justintime/nagios-plugins.git   JE-Nagios-Plugins --depth 1             && \
+    git clone https://github.com/nagiosenterprises/check_mssql_collection.git   nagios-mssql  --depth 1  && \
+    git clone https://github.com/jpmens/check-mqtt.git           jpmens-mqtt  --depth 1                  && \
+    git clone https://github.com/danfruehauf/nagios-plugins.git  DF-Nagios-Plugins  --depth 1            && \
     chmod +x /opt/WL-Nagios-Plugins/check*                                          && \
     chmod +x /opt/JE-Nagios-Plugins/check_mem/check_mem.pl                          && \
     chmod +x /opt/jpmens-mqtt/check-mqtt.py                                         && \
