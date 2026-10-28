@@ -110,9 +110,9 @@ RUN cd /tmp                                           && \
     make clean                                        && \
     cd /tmp && rm -Rf qstat
 
-RUN cd /tmp                                                                          && \
-    git clone https://github.com/NagiosEnterprises/nagioscore.git -b $NAGIOS_BRANCH  && \
-    cd nagioscore                                                                    && \
+RUN cd /tmp                                                                                    && \
+    git clone https://github.com/NagiosEnterprises/nagioscore.git -b $NAGIOS_BRANCH --depth 1  && \
+    cd nagioscore                                                                              && \
     ./configure                                  \
         --prefix=${NAGIOS_HOME}                  \
         --exec-prefix=${NAGIOS_HOME}             \
